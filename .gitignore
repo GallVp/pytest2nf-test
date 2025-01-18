@@ -2,3 +2,5 @@
 .antlr/
 build/
 target/
+
+.DS_Store

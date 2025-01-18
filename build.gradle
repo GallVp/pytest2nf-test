@@ -5,22 +5,29 @@
  */
 
 plugins {
+  id 'java'
   id 'application'
+  id 'antlr'
 }
 
 group = 'io.github.gallvp'
 version = '1.0-SNAPSHOT'
 description = 'nxf-pytest2nf-test'
-java.sourceCompatibility = JavaVersion.VERSION_1_7
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  antlr 'org.antlr:antlr4:4.9.2'
+  implementation 'org.antlr:antlr4-runtime:4.9.2'
+  implementation 'org.apache.groovy:groovy:4.0.24'
+}
+
+generateGrammarSource {
+  arguments += ['-no-listener', '-no-visitor']
+}
 
 application {
   mainClass = 'io.github.gallvp.converter.TestConverter'
-}
-
-jar {
-    manifest {
-        attributes(
-            'Main-Class': 'io.github.gallvp.converter.TestConverter'
-        )
-    }
 }
