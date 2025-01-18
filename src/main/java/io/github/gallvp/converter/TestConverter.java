@@ -1,13 +1,10 @@
 package io.github.gallvp.converter;
 
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.println;
-
 import java.io.IOException;
 import java.nio.file.Paths;
 
 import org.antlr.v4.runtime.*;
 
-import groovyjarjarantlr4.runtime.tree.ParseTree;
 import nextflow.script.parser.*;
 
 public class TestConverter {

@@ -7,7 +7,7 @@
 plugins {
   id 'java'
   id 'application'
-  id 'antlr'
+  // id 'antlr'
 }
 
 group = 'io.github.gallvp'
@@ -19,14 +19,14 @@ repositories {
 }
 
 dependencies {
-  antlr 'org.antlr:antlr4:4.9.2'
+  // antlr 'org.antlr:antlr4:4.9.2'
   implementation 'org.antlr:antlr4-runtime:4.9.2'
   implementation 'org.apache.groovy:groovy:4.0.24'
 }
 
-generateGrammarSource {
-  arguments += ['-no-listener', '-no-visitor']
-}
+// generateGrammarSource {
+//   arguments += ['-no-listener', '-no-visitor']
+// }
 
 application {
   mainClass = 'io.github.gallvp.converter.TestConverter'
