@@ -1,7 +1,8 @@
 package io.github.gallvp.converter
 
+import io.github.gallvp.converter.PyTest.Companion.Assignment
+import io.github.gallvp.converter.PyTest.Companion.Expression
 import nextflow.script.parser.ScriptParser.*
-import nextflow.script.parser.ScriptParser.WorkflowDefContext
 import nextflow.script.parser.ScriptParserBaseListener
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -50,65 +51,6 @@ class PyTestListener internal constructor() : ScriptParserBaseListener() {
         tests.peek().expressions.add(Expression(invokedComponent.text, componentArguments))
 
     }
-
-    data class PyTest(
-        val name: String, val assignments: ArrayList<Assignment> =
-            ArrayList(), val expressions: ArrayList<Expression> = ArrayList()
-    ) {
-
-        private fun getAssignedValue(variableName: String) : String? {
-            return this.assignments.firstOrNull { it.variableName == variableName }?.variableAssignment
-        }
-
-        private fun hasAssignedValue(variableName: String) : Boolean {
-            return this.assignments.any { it.variableName == variableName }
-        }
-
-        val nfTest: NFTest
-            get() {
-                val whenBlock = this.expressions.first().arguments.map { arg ->
-                    val argValue = if (hasAssignedValue(arg)) {
-                        getAssignedValue(arg)
-                    } else {
-                        arg
-                    }
-                    argValue ?: "FAILED TO GET VALUE FOR $arg"
-                }.mapIndexed { i, argValue ->
-                    "input[${i}] = $argValue"
-                }.joinToString("\n")
-
-                val thenBlock = """
-                    assertAll(
-                        { assert process.success },
-                        { assert snapshot(process.out).match() }
-                    )
-                """.trimIndent()
-
-                return NFTest(this.name, whenBlock, thenBlock)
-            }
-    }
-
-    data class NFTest(val name: String, val whenBlock: String, val thenBlock: String) {
-        override fun toString(): String {
-            return """
-                |test("$name") {
-                |    when {
-                |       process {
-                |           \"\"\"
-                |           $whenBlock
-                |           \"\"\"
-                |       }
-                |    }
-                |    then {
-                |       $thenBlock
-                |    }
-                |}
-            """.trimMargin()
-        }
-    }
-
-    data class Assignment(val variableName: String, val variableAssignment: String)
-    data class Expression(val component: String, val arguments: List<String>)
 
     companion object {
         private val logger: Logger = LoggerFactory.getLogger(PyTestListener::class.java)
