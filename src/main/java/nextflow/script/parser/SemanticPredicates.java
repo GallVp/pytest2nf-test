@@ -95,14 +95,14 @@ public class SemanticPredicates {
      *
      * @param context
      */
-    public static boolean isValidDirective(nextflow.config.parser.ConfigParser.ExpressionContext context) {
-        if (!(context instanceof nextflow.config.parser.ConfigParser.PathExprAltContext))
+    public static boolean isValidDirective(nextflow.script.parser.ConfigParser.ExpressionContext context) {
+        if (!(context instanceof nextflow.script.parser.ConfigParser.PathExprAltContext))
             return false;
 
         try {
-            var peac = (nextflow.config.parser.ConfigParser.PathExprAltContext) context;
+            var peac = (nextflow.script.parser.ConfigParser.PathExprAltContext) context;
             var last = peac.getChild(peac.getChildCount() - 1);
-            return last instanceof nextflow.config.parser.ConfigParser.IdentifierPrmrAltContext || last instanceof nextflow.config.parser.ConfigParser.PropertyPathExprAltContext;
+            return last instanceof nextflow.script.parser.ConfigParser.IdentifierPrmrAltContext || last instanceof nextflow.script.parser.ConfigParser.PropertyPathExprAltContext;
         } catch (IndexOutOfBoundsException | ClassCastException e) {
             throw new GroovyBugError("Unexpected structure of expression context: " + context, e);
         }

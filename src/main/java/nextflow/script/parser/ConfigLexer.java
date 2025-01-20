@@ -1,6 +1,6 @@
 // Generated from ConfigLexer.g4 by ANTLR 4.9.2
 
-package nextflow.config.parser;
+package nextflow.script.parser;
 
 import java.util.*;
 import java.util.regex.Pattern;

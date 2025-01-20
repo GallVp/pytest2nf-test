@@ -41,7 +41,7 @@ options {
 }
 
 @header {
-package nextflow.config.parser;
+package nextflow.script.parser;
 
 import nextflow.script.parser.AbstractParser;
 import org.apache.groovy.parser.antlr4.GroovySyntaxError;

@@ -7,7 +7,8 @@
 plugins {
   id 'java'
   id 'application'
-  // id 'antlr'
+  id 'antlr'
+  id 'org.jetbrains.kotlin.jvm'
 }
 
 group = 'io.github.gallvp'
@@ -19,15 +20,26 @@ repositories {
 }
 
 dependencies {
-  // antlr 'org.antlr:antlr4:4.9.2'
+  antlr 'org.antlr:antlr4:4.9.2'
   implementation 'org.antlr:antlr4-runtime:4.9.2'
   implementation 'org.apache.groovy:groovy:4.0.24'
+  implementation 'org.slf4j:slf4j-api:2.0.16'
+  implementation 'ch.qos.logback:logback-classic:1.5.16'
+  implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
-
-// generateGrammarSource {
-//   arguments += ['-no-listener', '-no-visitor']
-// }
 
 application {
   mainClass = 'io.github.gallvp.converter.TestConverter'
+}
+
+generateGrammarSource {
+  outputDirectory = file("${projectDir}/src/main/java/nextflow/script/parser")
+}
+
+kotlin {
+  jvmToolchain(17)
+}
+
+compileKotlin {
+  dependsOn(generateGrammarSource)
 }

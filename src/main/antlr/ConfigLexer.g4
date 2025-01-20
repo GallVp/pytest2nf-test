@@ -40,7 +40,7 @@ options {
 }
 
 @header {
-package nextflow.config.parser;
+package nextflow.script.parser;
 
 import java.util.*;
 import java.util.regex.Pattern;

@@ -234,6 +234,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_compilationUnit; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterCompilationUnit(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitCompilationUnit(this);
+		}
 	}
 
 	public final CompilationUnitContext compilationUnit() throws RecognitionException {
@@ -310,6 +318,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_scriptDeclarationOrStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterScriptDeclarationOrStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitScriptDeclarationOrStatement(this);
+		}
 	}
 
 	public final ScriptDeclarationOrStatementContext scriptDeclarationOrStatement() throws RecognitionException {
@@ -362,60 +378,140 @@ public class ScriptParser extends AbstractParser {
 			return getRuleContext(IncompleteScriptDeclarationContext.class,0);
 		}
 		public IncompleteScriptDeclAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIncompleteScriptDeclAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIncompleteScriptDeclAlt(this);
+		}
 	}
 	public static class ImportDeclAltContext extends ScriptDeclarationContext {
 		public ImportDeclarationContext importDeclaration() {
 			return getRuleContext(ImportDeclarationContext.class,0);
 		}
 		public ImportDeclAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterImportDeclAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitImportDeclAlt(this);
+		}
 	}
 	public static class FeatureFlagDeclAltContext extends ScriptDeclarationContext {
 		public FeatureFlagDeclarationContext featureFlagDeclaration() {
 			return getRuleContext(FeatureFlagDeclarationContext.class,0);
 		}
 		public FeatureFlagDeclAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterFeatureFlagDeclAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitFeatureFlagDeclAlt(this);
+		}
 	}
 	public static class ProcessDefAltContext extends ScriptDeclarationContext {
 		public ProcessDefContext processDef() {
 			return getRuleContext(ProcessDefContext.class,0);
 		}
 		public ProcessDefAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterProcessDefAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitProcessDefAlt(this);
+		}
 	}
 	public static class IncludeDeclAltContext extends ScriptDeclarationContext {
 		public IncludeDeclarationContext includeDeclaration() {
 			return getRuleContext(IncludeDeclarationContext.class,0);
 		}
 		public IncludeDeclAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIncludeDeclAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIncludeDeclAlt(this);
+		}
 	}
 	public static class ParamDeclAltContext extends ScriptDeclarationContext {
 		public ParamDeclarationContext paramDeclaration() {
 			return getRuleContext(ParamDeclarationContext.class,0);
 		}
 		public ParamDeclAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterParamDeclAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitParamDeclAlt(this);
+		}
 	}
 	public static class FunctionDefAltContext extends ScriptDeclarationContext {
 		public FunctionDefContext functionDef() {
 			return getRuleContext(FunctionDefContext.class,0);
 		}
 		public FunctionDefAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterFunctionDefAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitFunctionDefAlt(this);
+		}
 	}
 	public static class OutputDefAltContext extends ScriptDeclarationContext {
 		public OutputDefContext outputDef() {
 			return getRuleContext(OutputDefContext.class,0);
 		}
 		public OutputDefAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterOutputDefAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitOutputDefAlt(this);
+		}
 	}
 	public static class EnumDefAltContext extends ScriptDeclarationContext {
 		public EnumDefContext enumDef() {
 			return getRuleContext(EnumDefContext.class,0);
 		}
 		public EnumDefAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterEnumDefAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitEnumDefAlt(this);
+		}
 	}
 	public static class WorkflowDefAltContext extends ScriptDeclarationContext {
 		public WorkflowDefContext workflowDef() {
 			return getRuleContext(WorkflowDefContext.class,0);
 		}
 		public WorkflowDefAltContext(ScriptDeclarationContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterWorkflowDefAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitWorkflowDefAlt(this);
+		}
 	}
 
 	public final ScriptDeclarationContext scriptDeclaration() throws RecognitionException {
@@ -536,6 +632,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_featureFlagDeclaration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterFeatureFlagDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitFeatureFlagDeclaration(this);
+		}
 	}
 
 	public final FeatureFlagDeclarationContext featureFlagDeclaration() throws RecognitionException {
@@ -583,6 +687,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_featureFlagName; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterFeatureFlagName(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitFeatureFlagName(this);
+		}
 	}
 
 	public final FeatureFlagNameContext featureFlagName() throws RecognitionException {
@@ -636,6 +748,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_includeDeclaration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIncludeDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIncludeDeclaration(this);
+		}
 	}
 
 	public final IncludeDeclarationContext includeDeclaration() throws RecognitionException {
@@ -687,6 +807,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_includeNames; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIncludeNames(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIncludeNames(this);
+		}
 	}
 
 	public final IncludeNamesContext includeNames() throws RecognitionException {
@@ -760,6 +888,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_includeName; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIncludeName(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIncludeName(this);
+		}
 	}
 
 	public final IncludeNameContext includeName() throws RecognitionException {
@@ -809,6 +945,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_importDeclaration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterImportDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitImportDeclaration(this);
+		}
 	}
 
 	public final ImportDeclarationContext importDeclaration() throws RecognitionException {
@@ -860,6 +1004,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_paramDeclaration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterParamDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitParamDeclaration(this);
+		}
 	}
 
 	public final ParamDeclarationContext paramDeclaration() throws RecognitionException {
@@ -929,6 +1081,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterEnumDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitEnumDef(this);
+		}
 	}
 
 	public final EnumDefContext enumDef() throws RecognitionException {
@@ -1006,6 +1166,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_enumBody; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterEnumBody(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitEnumBody(this);
+		}
 	}
 
 	public final EnumBodyContext enumBody() throws RecognitionException {
@@ -1074,6 +1242,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_processDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterProcessDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitProcessDef(this);
+		}
 	}
 
 	public final ProcessDefContext processDef() throws RecognitionException {
@@ -1158,6 +1334,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_processBody; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterProcessBody(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitProcessBody(this);
+		}
 	}
 
 	public final ProcessBodyContext processBody() throws RecognitionException {
@@ -1372,6 +1556,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_processDirectives; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterProcessDirectives(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitProcessDirectives(this);
+		}
 	}
 
 	public final ProcessDirectivesContext processDirectives() throws RecognitionException {
@@ -1436,6 +1628,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_processInputs; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterProcessInputs(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitProcessInputs(this);
+		}
 	}
 
 	public final ProcessInputsContext processInputs() throws RecognitionException {
@@ -1506,6 +1706,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_processOutputs; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterProcessOutputs(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitProcessOutputs(this);
+		}
 	}
 
 	public final ProcessOutputsContext processOutputs() throws RecognitionException {
@@ -1567,6 +1775,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_processWhen; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterProcessWhen(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitProcessWhen(this);
+		}
 	}
 
 	public final ProcessWhenContext processWhen() throws RecognitionException {
@@ -1611,6 +1827,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_processExec; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterProcessExec(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitProcessExec(this);
+		}
 	}
 
 	public final ProcessExecContext processExec() throws RecognitionException {
@@ -1662,6 +1886,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_processStub; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterProcessStub(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitProcessStub(this);
+		}
 	}
 
 	public final ProcessStubContext processStub() throws RecognitionException {
@@ -1713,6 +1945,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_workflowDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterWorkflowDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitWorkflowDef(this);
+		}
 	}
 
 	public final WorkflowDefContext workflowDef() throws RecognitionException {
@@ -1810,6 +2050,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_workflowBody; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterWorkflowBody(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitWorkflowBody(this);
+		}
 	}
 
 	public final WorkflowBodyContext workflowBody() throws RecognitionException {
@@ -2004,6 +2252,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_workflowTakes; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterWorkflowTakes(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitWorkflowTakes(this);
+		}
 	}
 
 	public final WorkflowTakesContext workflowTakes() throws RecognitionException {
@@ -2054,6 +2310,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_workflowMain; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterWorkflowMain(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitWorkflowMain(this);
+		}
 	}
 
 	public final WorkflowMainContext workflowMain() throws RecognitionException {
@@ -2094,6 +2358,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_workflowEmits; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterWorkflowEmits(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitWorkflowEmits(this);
+		}
 	}
 
 	public final WorkflowEmitsContext workflowEmits() throws RecognitionException {
@@ -2153,6 +2425,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_workflowPublishers; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterWorkflowPublishers(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitWorkflowPublishers(this);
+		}
 	}
 
 	public final WorkflowPublishersContext workflowPublishers() throws RecognitionException {
@@ -2212,6 +2492,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_outputDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterOutputDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitOutputDef(this);
+		}
 	}
 
 	public final OutputDefContext outputDef() throws RecognitionException {
@@ -2279,6 +2567,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_outputBody; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterOutputBody(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitOutputBody(this);
+		}
 	}
 
 	public final OutputBodyContext outputBody() throws RecognitionException {
@@ -2339,6 +2635,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_outputTargetBody; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterOutputTargetBody(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitOutputTargetBody(this);
+		}
 	}
 
 	public final OutputTargetBodyContext outputTargetBody() throws RecognitionException {
@@ -2392,6 +2696,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_functionDef; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterFunctionDef(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitFunctionDef(this);
+		}
 	}
 
 	public final FunctionDefContext functionDef() throws RecognitionException {
@@ -2491,6 +2803,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_incompleteScriptDeclaration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIncompleteScriptDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIncompleteScriptDeclaration(this);
+		}
 	}
 
 	public final IncompleteScriptDeclarationContext incompleteScriptDeclaration() throws RecognitionException {
@@ -2558,24 +2878,56 @@ public class ScriptParser extends AbstractParser {
 	public static class EmptyStmtAltContext extends StatementContext {
 		public TerminalNode SEMI() { return getToken(ScriptParser.SEMI, 0); }
 		public EmptyStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterEmptyStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitEmptyStmtAlt(this);
+		}
 	}
 	public static class ExpressionStmtAltContext extends StatementContext {
 		public ExpressionStatementContext expressionStatement() {
 			return getRuleContext(ExpressionStatementContext.class,0);
 		}
 		public ExpressionStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterExpressionStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitExpressionStmtAlt(this);
+		}
 	}
 	public static class VariableDeclarationStmtAltContext extends StatementContext {
 		public VariableDeclarationContext variableDeclaration() {
 			return getRuleContext(VariableDeclarationContext.class,0);
 		}
 		public VariableDeclarationStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterVariableDeclarationStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitVariableDeclarationStmtAlt(this);
+		}
 	}
 	public static class TryCatchStmtAltContext extends StatementContext {
 		public TryCatchStatementContext tryCatchStatement() {
 			return getRuleContext(TryCatchStatementContext.class,0);
 		}
 		public TryCatchStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterTryCatchStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitTryCatchStmtAlt(this);
+		}
 	}
 	public static class ReturnStmtAltContext extends StatementContext {
 		public TerminalNode RETURN() { return getToken(ScriptParser.RETURN, 0); }
@@ -2583,6 +2935,14 @@ public class ScriptParser extends AbstractParser {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public ReturnStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterReturnStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitReturnStmtAlt(this);
+		}
 	}
 	public static class ThrowStmtAltContext extends StatementContext {
 		public TerminalNode THROW() { return getToken(ScriptParser.THROW, 0); }
@@ -2590,30 +2950,70 @@ public class ScriptParser extends AbstractParser {
 			return getRuleContext(ExpressionContext.class,0);
 		}
 		public ThrowStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterThrowStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitThrowStmtAlt(this);
+		}
 	}
 	public static class AssignmentStmtAltContext extends StatementContext {
 		public AssignmentStatementContext assignmentStatement() {
 			return getRuleContext(AssignmentStatementContext.class,0);
 		}
 		public AssignmentStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterAssignmentStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitAssignmentStmtAlt(this);
+		}
 	}
 	public static class IfElseStmtAltContext extends StatementContext {
 		public IfElseStatementContext ifElseStatement() {
 			return getRuleContext(IfElseStatementContext.class,0);
 		}
 		public IfElseStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIfElseStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIfElseStmtAlt(this);
+		}
 	}
 	public static class AssertStmtAltContext extends StatementContext {
 		public AssertStatementContext assertStatement() {
 			return getRuleContext(AssertStatementContext.class,0);
 		}
 		public AssertStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterAssertStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitAssertStmtAlt(this);
+		}
 	}
 	public static class MultipleAssignmentStmtAltContext extends StatementContext {
 		public MultipleAssignmentStatementContext multipleAssignmentStatement() {
 			return getRuleContext(MultipleAssignmentStatementContext.class,0);
 		}
 		public MultipleAssignmentStmtAltContext(StatementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterMultipleAssignmentStmtAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitMultipleAssignmentStmtAlt(this);
+		}
 	}
 
 	public final StatementContext statement() throws RecognitionException {
@@ -2753,6 +3153,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_ifElseStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIfElseStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIfElseStatement(this);
+		}
 	}
 
 	public final IfElseStatementContext ifElseStatement() throws RecognitionException {
@@ -2814,6 +3222,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_statementOrBlock; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterStatementOrBlock(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitStatementOrBlock(this);
+		}
 	}
 
 	public final StatementOrBlockContext statementOrBlock() throws RecognitionException {
@@ -2882,6 +3298,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_blockStatements; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterBlockStatements(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitBlockStatements(this);
+		}
 	}
 
 	public final BlockStatementsContext blockStatements() throws RecognitionException {
@@ -2955,6 +3379,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_tryCatchStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterTryCatchStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitTryCatchStatement(this);
+		}
 	}
 
 	public final TryCatchStatementContext tryCatchStatement() throws RecognitionException {
@@ -3023,6 +3455,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_catchClause; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterCatchClause(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitCatchClause(this);
+		}
 	}
 
 	public final CatchClauseContext catchClause() throws RecognitionException {
@@ -3081,6 +3521,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_catchTypes; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterCatchTypes(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitCatchTypes(this);
+		}
 	}
 
 	public final CatchTypesContext catchTypes() throws RecognitionException {
@@ -3142,6 +3590,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_assertStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterAssertStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitAssertStatement(this);
+		}
 	}
 
 	public final AssertStatementContext assertStatement() throws RecognitionException {
@@ -3209,6 +3665,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variableDeclaration; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterVariableDeclaration(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitVariableDeclaration(this);
+		}
 	}
 
 	public final VariableDeclarationContext variableDeclaration() throws RecognitionException {
@@ -3314,6 +3778,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_variableNames; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterVariableNames(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitVariableNames(this);
+		}
 	}
 
 	public final VariableNamesContext variableNames() throws RecognitionException {
@@ -3376,6 +3848,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_multipleAssignmentStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterMultipleAssignmentStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitMultipleAssignmentStatement(this);
+		}
 	}
 
 	public final MultipleAssignmentStatementContext multipleAssignmentStatement() throws RecognitionException {
@@ -3441,6 +3921,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_assignmentStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterAssignmentStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitAssignmentStatement(this);
+		}
 	}
 
 	public final AssignmentStatementContext assignmentStatement() throws RecognitionException {
@@ -3494,6 +3982,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expressionStatement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterExpressionStatement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitExpressionStatement(this);
+		}
 	}
 
 	public final ExpressionStatementContext expressionStatement() throws RecognitionException {
@@ -3555,6 +4051,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode BITNOT() { return getToken(ScriptParser.BITNOT, 0); }
 		public TerminalNode NOT() { return getToken(ScriptParser.NOT, 0); }
 		public UnaryNotExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterUnaryNotExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitUnaryNotExprAlt(this);
+		}
 	}
 	public static class ShiftExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3587,6 +4091,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode RANGE_INCLUSIVE() { return getToken(ScriptParser.RANGE_INCLUSIVE, 0); }
 		public TerminalNode RANGE_EXCLUSIVE_RIGHT() { return getToken(ScriptParser.RANGE_EXCLUSIVE_RIGHT, 0); }
 		public ShiftExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterShiftExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitShiftExprAlt(this);
+		}
 	}
 	public static class BitwiseOrExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3606,6 +4118,14 @@ public class ScriptParser extends AbstractParser {
 		}
 		public TerminalNode BITOR() { return getToken(ScriptParser.BITOR, 0); }
 		public BitwiseOrExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterBitwiseOrExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitBitwiseOrExprAlt(this);
+		}
 	}
 	public static class MultDivExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3627,6 +4147,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode DIV() { return getToken(ScriptParser.DIV, 0); }
 		public TerminalNode MOD() { return getToken(ScriptParser.MOD, 0); }
 		public MultDivExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterMultDivExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitMultDivExprAlt(this);
+		}
 	}
 	public static class AddSubExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3644,6 +4172,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode ADD() { return getToken(ScriptParser.ADD, 0); }
 		public TerminalNode SUB() { return getToken(ScriptParser.SUB, 0); }
 		public AddSubExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterAddSubExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitAddSubExprAlt(this);
+		}
 	}
 	public static class ExclusiveOrExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3663,6 +4199,14 @@ public class ScriptParser extends AbstractParser {
 		}
 		public TerminalNode XOR() { return getToken(ScriptParser.XOR, 0); }
 		public ExclusiveOrExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterExclusiveOrExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitExclusiveOrExprAlt(this);
+		}
 	}
 	public static class RegexExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3683,6 +4227,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode REGEX_FIND() { return getToken(ScriptParser.REGEX_FIND, 0); }
 		public TerminalNode REGEX_MATCH() { return getToken(ScriptParser.REGEX_MATCH, 0); }
 		public RegexExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterRegexExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitRegexExprAlt(this);
+		}
 	}
 	public static class ConditionalExprAltContext extends ExpressionContext {
 		public ExpressionContext condition;
@@ -3704,6 +4256,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode COLON() { return getToken(ScriptParser.COLON, 0); }
 		public TerminalNode ELVIS() { return getToken(ScriptParser.ELVIS, 0); }
 		public ConditionalExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterConditionalExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitConditionalExprAlt(this);
+		}
 	}
 	public static class PowerExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3720,6 +4280,14 @@ public class ScriptParser extends AbstractParser {
 		}
 		public TerminalNode POWER() { return getToken(ScriptParser.POWER, 0); }
 		public PowerExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterPowerExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitPowerExprAlt(this);
+		}
 	}
 	public static class RelationalExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3744,6 +4312,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode IN() { return getToken(ScriptParser.IN, 0); }
 		public TerminalNode NOT_IN() { return getToken(ScriptParser.NOT_IN, 0); }
 		public RelationalExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterRelationalExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitRelationalExprAlt(this);
+		}
 	}
 	public static class LogicalAndExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3763,6 +4339,14 @@ public class ScriptParser extends AbstractParser {
 		}
 		public TerminalNode AND() { return getToken(ScriptParser.AND, 0); }
 		public LogicalAndExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterLogicalAndExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitLogicalAndExprAlt(this);
+		}
 	}
 	public static class BitwiseAndExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3782,6 +4366,14 @@ public class ScriptParser extends AbstractParser {
 		}
 		public TerminalNode BITAND() { return getToken(ScriptParser.BITAND, 0); }
 		public BitwiseAndExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterBitwiseAndExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitBitwiseAndExprAlt(this);
+		}
 	}
 	public static class UnaryAddExprAltContext extends ExpressionContext {
 		public Token op;
@@ -3791,6 +4383,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode ADD() { return getToken(ScriptParser.ADD, 0); }
 		public TerminalNode SUB() { return getToken(ScriptParser.SUB, 0); }
 		public UnaryAddExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterUnaryAddExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitUnaryAddExprAlt(this);
+		}
 	}
 	public static class IncompleteExprAltContext extends ExpressionContext {
 		public ExpressionContext expression() {
@@ -3803,6 +4403,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode SPREAD_DOT() { return getToken(ScriptParser.SPREAD_DOT, 0); }
 		public TerminalNode SAFE_DOT() { return getToken(ScriptParser.SAFE_DOT, 0); }
 		public IncompleteExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIncompleteExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIncompleteExprAlt(this);
+		}
 	}
 	public static class RelationalCastExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3821,6 +4429,14 @@ public class ScriptParser extends AbstractParser {
 		}
 		public TerminalNode AS() { return getToken(ScriptParser.AS, 0); }
 		public RelationalCastExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterRelationalCastExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitRelationalCastExprAlt(this);
+		}
 	}
 	public static class LogicalOrExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3840,6 +4456,14 @@ public class ScriptParser extends AbstractParser {
 		}
 		public TerminalNode OR() { return getToken(ScriptParser.OR, 0); }
 		public LogicalOrExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterLogicalOrExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitLogicalOrExprAlt(this);
+		}
 	}
 	public static class EqualityExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3861,6 +4485,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode NOTEQUAL() { return getToken(ScriptParser.NOTEQUAL, 0); }
 		public TerminalNode SPACESHIP() { return getToken(ScriptParser.SPACESHIP, 0); }
 		public EqualityExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterEqualityExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitEqualityExprAlt(this);
+		}
 	}
 	public static class PathExprAltContext extends ExpressionContext {
 		public PrimaryContext primary() {
@@ -3873,6 +4505,14 @@ public class ScriptParser extends AbstractParser {
 			return getRuleContext(PathElementContext.class,i);
 		}
 		public PathExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterPathExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitPathExprAlt(this);
+		}
 	}
 	public static class RelationalTypeExprAltContext extends ExpressionContext {
 		public ExpressionContext left;
@@ -3892,6 +4532,14 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode INSTANCEOF() { return getToken(ScriptParser.INSTANCEOF, 0); }
 		public TerminalNode NOT_INSTANCEOF() { return getToken(ScriptParser.NOT_INSTANCEOF, 0); }
 		public RelationalTypeExprAltContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterRelationalTypeExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitRelationalTypeExprAlt(this);
+		}
 	}
 
 	public final ExpressionContext expression() throws RecognitionException {
@@ -4477,18 +5125,42 @@ public class ScriptParser extends AbstractParser {
 			return getRuleContext(MapContext.class,0);
 		}
 		public MapPrmrAltContext(PrimaryContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterMapPrmrAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitMapPrmrAlt(this);
+		}
 	}
 	public static class GstringPrmrAltContext extends PrimaryContext {
 		public GstringContext gstring() {
 			return getRuleContext(GstringContext.class,0);
 		}
 		public GstringPrmrAltContext(PrimaryContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterGstringPrmrAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitGstringPrmrAlt(this);
+		}
 	}
 	public static class ListPrmrAltContext extends PrimaryContext {
 		public ListContext list() {
 			return getRuleContext(ListContext.class,0);
 		}
 		public ListPrmrAltContext(PrimaryContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterListPrmrAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitListPrmrAlt(this);
+		}
 	}
 	public static class NewPrmrAltContext extends PrimaryContext {
 		public TerminalNode NEW() { return getToken(ScriptParser.NEW, 0); }
@@ -4496,36 +5168,84 @@ public class ScriptParser extends AbstractParser {
 			return getRuleContext(CreatorContext.class,0);
 		}
 		public NewPrmrAltContext(PrimaryContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterNewPrmrAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitNewPrmrAlt(this);
+		}
 	}
 	public static class ClosurePrmrAltContext extends PrimaryContext {
 		public ClosureContext closure() {
 			return getRuleContext(ClosureContext.class,0);
 		}
 		public ClosurePrmrAltContext(PrimaryContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterClosurePrmrAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitClosurePrmrAlt(this);
+		}
 	}
 	public static class LiteralPrmrAltContext extends PrimaryContext {
 		public LiteralContext literal() {
 			return getRuleContext(LiteralContext.class,0);
 		}
 		public LiteralPrmrAltContext(PrimaryContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterLiteralPrmrAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitLiteralPrmrAlt(this);
+		}
 	}
 	public static class BuiltInTypePrmrAltContext extends PrimaryContext {
 		public BuiltInTypeContext builtInType() {
 			return getRuleContext(BuiltInTypeContext.class,0);
 		}
 		public BuiltInTypePrmrAltContext(PrimaryContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterBuiltInTypePrmrAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitBuiltInTypePrmrAlt(this);
+		}
 	}
 	public static class IdentifierPrmrAltContext extends PrimaryContext {
 		public IdentifierContext identifier() {
 			return getRuleContext(IdentifierContext.class,0);
 		}
 		public IdentifierPrmrAltContext(PrimaryContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIdentifierPrmrAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIdentifierPrmrAlt(this);
+		}
 	}
 	public static class ParenPrmrAltContext extends PrimaryContext {
 		public ParExpressionContext parExpression() {
 			return getRuleContext(ParExpressionContext.class,0);
 		}
 		public ParenPrmrAltContext(PrimaryContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterParenPrmrAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitParenPrmrAlt(this);
+		}
 	}
 
 	public final PrimaryContext primary() throws RecognitionException {
@@ -4638,6 +5358,14 @@ public class ScriptParser extends AbstractParser {
 			return getRuleContext(ClosureWithLabelsContext.class,0);
 		}
 		public ClosureWithLabelsPathExprAltContext(PathElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterClosureWithLabelsPathExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitClosureWithLabelsPathExprAlt(this);
+		}
 	}
 	public static class PropertyPathExprAltContext extends PathElementContext {
 		public NlsContext nls() {
@@ -4650,24 +5378,56 @@ public class ScriptParser extends AbstractParser {
 		public TerminalNode SPREAD_DOT() { return getToken(ScriptParser.SPREAD_DOT, 0); }
 		public TerminalNode SAFE_DOT() { return getToken(ScriptParser.SAFE_DOT, 0); }
 		public PropertyPathExprAltContext(PathElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterPropertyPathExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitPropertyPathExprAlt(this);
+		}
 	}
 	public static class IndexPathExprAltContext extends PathElementContext {
 		public IndexPropertyArgsContext indexPropertyArgs() {
 			return getRuleContext(IndexPropertyArgsContext.class,0);
 		}
 		public IndexPathExprAltContext(PathElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIndexPathExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIndexPathExprAlt(this);
+		}
 	}
 	public static class ClosurePathExprAltContext extends PathElementContext {
 		public ClosureContext closure() {
 			return getRuleContext(ClosureContext.class,0);
 		}
 		public ClosurePathExprAltContext(PathElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterClosurePathExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitClosurePathExprAlt(this);
+		}
 	}
 	public static class ArgumentsPathExprAltContext extends PathElementContext {
 		public ArgumentsContext arguments() {
 			return getRuleContext(ArgumentsContext.class,0);
 		}
 		public ArgumentsPathExprAltContext(PathElementContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterArgumentsPathExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitArgumentsPathExprAlt(this);
+		}
 	}
 
 	public final PathElementContext pathElement() throws RecognitionException {
@@ -4757,6 +5517,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_namedProperty; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterNamedProperty(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitNamedProperty(this);
+		}
 	}
 
 	public final NamedPropertyContext namedProperty() throws RecognitionException {
@@ -4810,6 +5578,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_indexPropertyArgs; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIndexPropertyArgs(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIndexPropertyArgs(this);
+		}
 	}
 
 	public final IndexPropertyArgsContext indexPropertyArgs() throws RecognitionException {
@@ -4861,6 +5637,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_identifier; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIdentifier(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIdentifier(this);
+		}
 	}
 
 	public final IdentifierContext identifier() throws RecognitionException {
@@ -4909,22 +5693,62 @@ public class ScriptParser extends AbstractParser {
 			return getRuleContext(StringLiteralContext.class,0);
 		}
 		public StringLiteralAltContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterStringLiteralAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitStringLiteralAlt(this);
+		}
 	}
 	public static class IntegerLiteralAltContext extends LiteralContext {
 		public TerminalNode IntegerLiteral() { return getToken(ScriptParser.IntegerLiteral, 0); }
 		public IntegerLiteralAltContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterIntegerLiteralAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitIntegerLiteralAlt(this);
+		}
 	}
 	public static class FloatingPointLiteralAltContext extends LiteralContext {
 		public TerminalNode FloatingPointLiteral() { return getToken(ScriptParser.FloatingPointLiteral, 0); }
 		public FloatingPointLiteralAltContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterFloatingPointLiteralAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitFloatingPointLiteralAlt(this);
+		}
 	}
 	public static class NullLiteralAltContext extends LiteralContext {
 		public TerminalNode NullLiteral() { return getToken(ScriptParser.NullLiteral, 0); }
 		public NullLiteralAltContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterNullLiteralAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitNullLiteralAlt(this);
+		}
 	}
 	public static class BooleanLiteralAltContext extends LiteralContext {
 		public TerminalNode BooleanLiteral() { return getToken(ScriptParser.BooleanLiteral, 0); }
 		public BooleanLiteralAltContext(LiteralContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterBooleanLiteralAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitBooleanLiteralAlt(this);
+		}
 	}
 
 	public final LiteralContext literal() throws RecognitionException {
@@ -4995,6 +5819,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stringLiteral; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterStringLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitStringLiteral(this);
+		}
 	}
 
 	public final StringLiteralContext stringLiteral() throws RecognitionException {
@@ -5039,6 +5871,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_gstring; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterGstring(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitGstring(this);
+		}
 	}
 
 	public final GstringContext gstring() throws RecognitionException {
@@ -5128,14 +5968,38 @@ public class ScriptParser extends AbstractParser {
 		}
 		public TerminalNode RBRACE() { return getToken(ScriptParser.RBRACE, 0); }
 		public GstringDqExprAltContext(GstringDqPartContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterGstringDqExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitGstringDqExprAlt(this);
+		}
 	}
 	public static class GstringDqTextAltContext extends GstringDqPartContext {
 		public TerminalNode GStringText() { return getToken(ScriptParser.GStringText, 0); }
 		public GstringDqTextAltContext(GstringDqPartContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterGstringDqTextAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitGstringDqTextAlt(this);
+		}
 	}
 	public static class GstringDqPathAltContext extends GstringDqPartContext {
 		public TerminalNode GStringPath() { return getToken(ScriptParser.GStringPath, 0); }
 		public GstringDqPathAltContext(GstringDqPartContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterGstringDqPathAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitGstringDqPathAlt(this);
+		}
 	}
 
 	public final GstringDqPartContext gstringDqPart() throws RecognitionException {
@@ -5202,10 +6066,26 @@ public class ScriptParser extends AbstractParser {
 	public static class GstringTdqPathAltContext extends GstringTdqPartContext {
 		public TerminalNode TdqGStringPath() { return getToken(ScriptParser.TdqGStringPath, 0); }
 		public GstringTdqPathAltContext(GstringTdqPartContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterGstringTdqPathAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitGstringTdqPathAlt(this);
+		}
 	}
 	public static class GstringTdqTextAltContext extends GstringTdqPartContext {
 		public TerminalNode TdqGStringText() { return getToken(ScriptParser.TdqGStringText, 0); }
 		public GstringTdqTextAltContext(GstringTdqPartContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterGstringTdqTextAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitGstringTdqTextAlt(this);
+		}
 	}
 	public static class GstringTdqExprAltContext extends GstringTdqPartContext {
 		public TerminalNode TdqGStringExprStart() { return getToken(ScriptParser.TdqGStringExprStart, 0); }
@@ -5214,6 +6094,14 @@ public class ScriptParser extends AbstractParser {
 		}
 		public TerminalNode RBRACE() { return getToken(ScriptParser.RBRACE, 0); }
 		public GstringTdqExprAltContext(GstringTdqPartContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterGstringTdqExprAlt(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitGstringTdqExprAlt(this);
+		}
 	}
 
 	public final GstringTdqPartContext gstringTdqPart() throws RecognitionException {
@@ -5277,6 +6165,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_creator; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterCreator(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitCreator(this);
+		}
 	}
 
 	public final CreatorContext creator() throws RecognitionException {
@@ -5316,6 +6212,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_createdName; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterCreatedName(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitCreatedName(this);
+		}
 	}
 
 	public final CreatedNameContext createdName() throws RecognitionException {
@@ -5403,6 +6307,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_parExpression; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterParExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitParExpression(this);
+		}
 	}
 
 	public final ParExpressionContext parExpression() throws RecognitionException {
@@ -5454,6 +6366,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_closure; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterClosure(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitClosure(this);
+		}
 	}
 
 	public final ClosureContext closure() throws RecognitionException {
@@ -5537,6 +6457,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_formalParameterList; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterFormalParameterList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitFormalParameterList(this);
+		}
 	}
 
 	public final FormalParameterListContext formalParameterList() throws RecognitionException {
@@ -5601,6 +6529,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_formalParameter; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterFormalParameter(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitFormalParameter(this);
+		}
 	}
 
 	public final FormalParameterContext formalParameter() throws RecognitionException {
@@ -5680,6 +6616,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_closureWithLabels; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterClosureWithLabels(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitClosureWithLabels(this);
+		}
 	}
 
 	public final ClosureWithLabelsContext closureWithLabels() throws RecognitionException {
@@ -5751,6 +6695,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_blockStatementsWithLabels; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterBlockStatementsWithLabels(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitBlockStatementsWithLabels(this);
+		}
 	}
 
 	public final BlockStatementsWithLabelsContext blockStatementsWithLabels() throws RecognitionException {
@@ -5822,6 +6774,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_statementOrLabeled; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterStatementOrLabeled(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitStatementOrLabeled(this);
+		}
 	}
 
 	public final StatementOrLabeledContext statementOrLabeled() throws RecognitionException {
@@ -5881,6 +6841,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_list; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitList(this);
+		}
 	}
 
 	public final ListContext list() throws RecognitionException {
@@ -5952,6 +6920,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_expressionList; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterExpressionList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitExpressionList(this);
+		}
 	}
 
 	public final ExpressionListContext expressionList() throws RecognitionException {
@@ -6016,6 +6992,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_map; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterMap(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitMap(this);
+		}
 	}
 
 	public final MapContext map() throws RecognitionException {
@@ -6096,6 +7080,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_mapEntryList; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterMapEntryList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitMapEntryList(this);
+		}
 	}
 
 	public final MapEntryListContext mapEntryList() throws RecognitionException {
@@ -6154,6 +7146,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_mapEntry; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterMapEntry(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitMapEntry(this);
+		}
 	}
 
 	public final MapEntryContext mapEntry() throws RecognitionException {
@@ -6192,6 +7192,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_mapEntryLabel; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterMapEntryLabel(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitMapEntryLabel(this);
+		}
 	}
 
 	public final MapEntryLabelContext mapEntryLabel() throws RecognitionException {
@@ -6234,6 +7242,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_builtInType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterBuiltInType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitBuiltInType(this);
+		}
 	}
 
 	public final BuiltInTypeContext builtInType() throws RecognitionException {
@@ -6276,6 +7292,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_arguments; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterArguments(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitArguments(this);
+		}
 	}
 
 	public final ArgumentsContext arguments() throws RecognitionException {
@@ -6347,6 +7371,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_argumentList; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterArgumentList(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitArgumentList(this);
+		}
 	}
 
 	public final ArgumentListContext argumentList() throws RecognitionException {
@@ -6404,6 +7436,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_argumentListElement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterArgumentListElement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitArgumentListElement(this);
+		}
 	}
 
 	public final ArgumentListElementContext argumentListElement() throws RecognitionException {
@@ -6452,6 +7492,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_namedArg; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterNamedArg(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitNamedArg(this);
+		}
 	}
 
 	public final NamedArgContext namedArg() throws RecognitionException {
@@ -6493,6 +7541,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_type; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitType(this);
+		}
 	}
 
 	public final TypeContext type() throws RecognitionException {
@@ -6567,6 +7623,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_primitiveType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterPrimitiveType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitPrimitiveType(this);
+		}
 	}
 
 	public final PrimitiveTypeContext primitiveType() throws RecognitionException {
@@ -6601,6 +7665,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_qualifiedClassName; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterQualifiedClassName(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitQualifiedClassName(this);
+		}
 	}
 
 	public final QualifiedClassNameContext qualifiedClassName() throws RecognitionException {
@@ -6641,6 +7713,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_qualifiedNameElements; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterQualifiedNameElements(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitQualifiedNameElements(this);
+		}
 	}
 
 	public final QualifiedNameElementsContext qualifiedNameElements() throws RecognitionException {
@@ -6692,6 +7772,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_qualifiedNameElement; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterQualifiedNameElement(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitQualifiedNameElement(this);
+		}
 	}
 
 	public final QualifiedNameElementContext qualifiedNameElement() throws RecognitionException {
@@ -6748,6 +7836,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_className; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterClassName(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitClassName(this);
+		}
 	}
 
 	public final ClassNameContext className() throws RecognitionException {
@@ -6788,6 +7884,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_typeArguments; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterTypeArguments(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitTypeArguments(this);
+		}
 	}
 
 	public final TypeArgumentsContext typeArguments() throws RecognitionException {
@@ -6848,6 +7952,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_legacyType; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterLegacyType(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitLegacyType(this);
+		}
 	}
 
 	public final LegacyTypeContext legacyType() throws RecognitionException {
@@ -6919,6 +8031,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_keywords; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterKeywords(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitKeywords(this);
+		}
 	}
 
 	public final KeywordsContext keywords() throws RecognitionException {
@@ -6957,6 +8077,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_rparen; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterRparen(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitRparen(this);
+		}
 	}
 
 	public final RparenContext rparen() throws RecognitionException {
@@ -6989,6 +8117,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_nls; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterNls(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitNls(this);
+		}
 	}
 
 	public final NlsContext nls() throws RecognitionException {
@@ -7040,6 +8176,14 @@ public class ScriptParser extends AbstractParser {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_sep; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).enterSep(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ScriptParserListener ) ((ScriptParserListener)listener).exitSep(this);
+		}
 	}
 
 	public final SepContext sep() throws RecognitionException {

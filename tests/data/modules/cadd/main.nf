@@ -2,7 +2,7 @@
 
 nextflow.enable.dsl = 2
 
-include { CADD as DO_CADD } from '../../../../modules/nf-core/cadd/main.nf'
+include { CADD } from '../../../../modules/nf-core/cadd/main.nf'
 
 workflow test_cadd {
 
@@ -11,5 +11,5 @@ workflow test_cadd {
         file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf'], checkIfExists: true)
     ]
 
-    DO_CADD ( input, file(System.getenv('PWD')) )
+    CADD ( input, file(System.getenv('PWD')) )
 }
