@@ -25,7 +25,7 @@ object TestConverter {
         }
 
         if (testPath == null) {
-            System.err.println("Usage: java -jar TestConverter --test <test_folder>")
+            System.err.println("Usage: TestConverter --test <test_folder>")
             exitProcess(1)
         }
 
@@ -39,7 +39,6 @@ object TestConverter {
             exitProcess(1)
         }
 
-
         // Parse test file
         val nextflowLexer = ScriptLexer(charStream)
         val tokens = CommonTokenStream(nextflowLexer)
@@ -47,7 +46,7 @@ object TestConverter {
         val compilationUnit = nextflowParser.compilationUnit()
 
         // Walk the tree and pick items for nf-test
-        val listener = PyTestListener(componentName)
+        val listener = PyTestListener()
         val extractor = ParseTreeWalker()
         extractor.walk(listener, compilationUnit)
     }
