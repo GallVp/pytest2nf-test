@@ -11,5 +11,5 @@ workflow test_cadd {
         file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf'], checkIfExists: true)
     ]
 
-    CADD ( input, file(System.getenv('PWD')) )
+    CADD ( input, file("$PWD") )
 }

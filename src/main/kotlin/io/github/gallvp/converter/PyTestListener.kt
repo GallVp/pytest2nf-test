@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 class PyTestListener internal constructor() : ScriptParserBaseListener() {
-    private var tests: Stack<PyTest> = Stack()
+    var tests: Stack<PyTest> = Stack()
 
     override fun enterWorkflowDef(ctx: WorkflowDefContext) {
         val testName = ctx.name.text

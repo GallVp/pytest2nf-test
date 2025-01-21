@@ -25,15 +25,21 @@ data class PyTest(
                 }
                 argValue ?: "FAILED TO GET VALUE FOR $arg"
             }.mapIndexed { i, argValue ->
-                "input[${i}] = $argValue"
+                if ( argValue.contains("\n") ) {
+                    """
+                        |input[${i}] = ${argValue.replace("\n", "\n    ")}
+                    """.trimMargin()
+                } else {
+                    "input[${i}] = $argValue"
+                }
             }.joinToString("\n")
 
             val thenBlock = """
-                    assertAll(
-                        { assert process.success },
-                        { assert snapshot(process.out).match() }
-                    )
-                """.trimIndent()
+                |assertAll(
+                |    { assert process.success },
+                |    { assert snapshot(process.out).match() }
+                |)
+                """.trimMargin()
 
             return NFTest(this.name, whenBlock, thenBlock)
         }

@@ -5,14 +5,14 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
         return """
                 |test("$name") {
                 |    when {
-                |       process {
-                |           \"\"\"
-                |           $whenBlock
-                |           \"\"\"
-                |       }
+                |        process {
+                |            ${"\"\"\""}
+                |${whenBlock.split("\n").joinToString("\n") { "            $it" }}
+                |            ${"\"\"\""}
+                |        }    
                 |    }
                 |    then {
-                |       $thenBlock
+                |${thenBlock.split("\n").joinToString("\n") { "        $it" }}
                 |    }
                 |}
             """.trimMargin()

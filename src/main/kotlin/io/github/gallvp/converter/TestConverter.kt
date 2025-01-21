@@ -6,6 +6,8 @@ import org.antlr.v4.runtime.CharStream
 import org.antlr.v4.runtime.CharStreams
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
 import java.nio.file.Paths
@@ -14,33 +16,43 @@ import kotlin.system.exitProcess
 object TestConverter {
     @kotlin.jvm.JvmStatic
     fun main(args: Array<String>) {
+        var mainPath: String? = null
         var testPath: String? = null
 
-        // Parse arguments
+        // Process args
         for (i in args.indices) {
-            if (args[i] == "--test" && i + 1 < args.size) {
-                testPath = args[i + 1]
-                break
+            when (args[i]) {
+                "--main" -> if (i + 1 < args.size) mainPath = args[i + 1]
+                "--test" -> if (i + 1 < args.size) testPath = args[i + 1]
             }
         }
 
-        if (testPath == null) {
-            System.err.println("Usage: TestConverter --test <test_folder>")
+        if (mainPath.isNullOrBlank() || testPath.isNullOrBlank()) {
+            System.err.println(
+                """
+                Usage: TestConverter --main <main.nf> --test <test.nf>
+            """.trimIndent()
+            )
             exitProcess(1)
         }
 
-        // Read main.nf from test folder
-        val componentName = File(testPath).name
-        var charStream: CharStream? = null
-        try {
-            charStream = CharStreams.fromPath(Paths.get("$testPath/main.nf"))
-        } catch (ioException: IOException) {
-            System.err.printf("Failed to read main.nf from %s\n", testPath)
-            exitProcess(1)
-        }
+        // Read files
+        val testFile = File(testPath)
+        val mainFile = File(mainPath)
+        val mainFileRelativePath = mainFile.relativeTo(testFile.parentFile)
+
+        val mainFileText = mainFile.readText()
+        val componentAttributes = Regex("\\s*(process|workflow)\\s+(\\w+)\\s*\\{").find(mainFileText)?.groupValues
+        val componentName = componentAttributes?.get(2)?.lowercase()
+        val componentType = componentAttributes?.get(1)?.lowercase()
+
+        require(componentName != null && componentType != null) { "Could not find component name or type in $mainPath" }
+
+        logger.info("Found $componentType: $componentName")
 
         // Parse test file
-        val nextflowLexer = ScriptLexer(charStream)
+        val testFileCharStream = getCharStreamFromFile(testPath)
+        val nextflowLexer = ScriptLexer(testFileCharStream)
         val tokens = CommonTokenStream(nextflowLexer)
         val nextflowParser = ScriptParser(tokens)
         val compilationUnit = nextflowParser.compilationUnit()
@@ -49,7 +61,24 @@ object TestConverter {
         val listener = PyTestListener()
         val extractor = ParseTreeWalker()
         extractor.walk(listener, compilationUnit)
+
+        // Populate a nf-test file
+        val componentNFTest = ComponentNFTest(
+            componentName,
+            componentType,
+            mainFileRelativePath.toString(),
+            listener.tests.toList().map { it.nfTest })
+        File(testFile.parent.plus("/main.nf.test")).writeText(componentNFTest.fileText)
     }
 
+    private fun getCharStreamFromFile(filePath: String): CharStream? {
+        return try {
+            CharStreams.fromPath(Paths.get(filePath))
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
 
+    private val logger: Logger = LoggerFactory.getLogger(PyTestListener::class.java)
 }
