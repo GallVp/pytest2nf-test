@@ -22,7 +22,6 @@ class PyTestListener internal constructor() : ScriptParserBaseListener() {
         logger.info("Picked PyTest: {}", tests.peek().name)
 
         logger.debug("{}", tests.peek())
-        logger.debug("Equivalent nf-test: \n{}", tests.peek().nfTest)
     }
 
     override fun enterAssignmentStatement(ctx: AssignmentStatementContext) {
