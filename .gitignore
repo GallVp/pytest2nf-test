@@ -1,6 +1,7 @@
 .idea/
 .gradle/
 .antlr/
+.kotlin/
 build/
 target/
 

@@ -11,4 +11,4 @@ plugins {
  * This project uses @Incubating APIs which are subject to change.
  */
 
-rootProject.name = 'nxf-pytest2nf-test'
+rootProject.name = 'pytest2nf-test'
