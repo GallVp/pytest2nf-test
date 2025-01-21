@@ -17,7 +17,7 @@ class FileProcessorTest {
 
         val outputPath: Path = Paths.get("test/cadd/tests/main.nf.test")
 
-        val expectedMD5 = "b1b99d2371a03164ceb76b943cd2d98"
+        val expectedMD5 = "b1b99d2371a03164ceb76b943cd2d981"
 
         val args = arrayOf<String>("--main", "$mainPath", "--test", "$pyTestMainPath")
         TestConverter.main(args)
