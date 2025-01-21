@@ -67,8 +67,10 @@ object TestConverter {
             componentName,
             componentType,
             mainFileRelativePath.toString(),
-            listener.tests.toList().map { NFTest.from(it) })
+            listener.tests.toList().map { NFTest.from(it, componentName) })
         File(testFile.parent.plus("/main.nf.test")).writeText(componentNFTest.fileText)
+
+        logger.info("Saved nf-test file to ${testFile.parent.plus("/main.nf.test")}")
     }
 
     private fun getCharStreamFromFile(filePath: String): CharStream? {
@@ -80,5 +82,5 @@ object TestConverter {
         }
     }
 
-    private val logger: Logger = LoggerFactory.getLogger(PyTestListener::class.java)
+    private val logger: Logger = LoggerFactory.getLogger(TestConverter::class.java)
 }

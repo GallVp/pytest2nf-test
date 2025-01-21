@@ -20,8 +20,6 @@ class PyTestListener internal constructor() : ScriptParserBaseListener() {
 
     override fun exitWorkflowDef(ctx: WorkflowDefContext) {
         logger.info("Picked PyTest: {}", tests.peek().name)
-
-        logger.debug("{}", tests.peek())
     }
 
     override fun enterAssignmentStatement(ctx: AssignmentStatementContext) {
@@ -32,19 +30,29 @@ class PyTestListener internal constructor() : ScriptParserBaseListener() {
 
     override fun enterExpressionStatement(ctx: ExpressionStatementContext) {
         val expression = ctx.expression
+
+        logger.debug("Picked expression with children: {}", expression.children.map { it.javaClass.name.split("\$")[1] })
+
         if (expression.children.size != 2) {
             logger.debug("Expression ${expression.text} children size is ${ctx.expression.children.size}, skipping!")
             return
         }
 
+        if (expression.children[1].javaClass.name.split("\$")[1] == "IndexPathExprAltContext") {
+            logger.debug("Expression ${expression.text} is suspected to be a closure and ignored for now!")
+            return
+        }
+
         val invokedComponent = expression.children[0]
+
+        logger.debug("Invoked component: ${invokedComponent.text}")
+
         val componentArguments =
             (expression.children[1] as ArgumentsPathExprAltContext).arguments().argumentList().argumentListElement()
                 .map {
                     it.text.trim()
                 }
 
-        logger.debug("Invoked component: ${invokedComponent.text}")
         logger.debug("Component arguments: {}", componentArguments)
 
         tests.peek().expressions.add(Expression(invokedComponent.text, componentArguments))

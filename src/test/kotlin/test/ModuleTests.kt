@@ -8,7 +8,7 @@ import java.nio.file.Paths
 import java.security.MessageDigest
 import kotlin.test.Test
 
-class FileProcessorTest {
+class ModuleTests {
 
     @Test
     fun testCADD() {
@@ -17,9 +17,9 @@ class FileProcessorTest {
 
         val outputPath: Path = Paths.get("test/cadd/tests/main.nf.test")
 
-        val expectedMD5 = "b1b99d2371a03164ceb76b943cd2d981"
+        val expectedMD5 = "c1bbabe2cd0c1634f479cd09a0ad0d21"
 
-        val args = arrayOf<String>("--main", "$mainPath", "--test", "$pyTestMainPath")
+        val args = arrayOf("--main", "$mainPath", "--test", "$pyTestMainPath")
         TestConverter.main(args)
 
         val actualMD5 = computeMD5Checksum(outputPath)
