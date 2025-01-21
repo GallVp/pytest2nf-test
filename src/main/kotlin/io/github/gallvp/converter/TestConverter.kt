@@ -67,7 +67,7 @@ object TestConverter {
             componentName,
             componentType,
             mainFileRelativePath.toString(),
-            listener.tests.toList().map { it.nfTest })
+            listener.tests.toList().map { NFTest.from(it) })
         File(testFile.parent.plus("/main.nf.test")).writeText(componentNFTest.fileText)
     }
 
