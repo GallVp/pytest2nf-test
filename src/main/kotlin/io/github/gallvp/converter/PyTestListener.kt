@@ -6,10 +6,40 @@ import nextflow.script.parser.ScriptParser.*
 import nextflow.script.parser.ScriptParserBaseListener
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
-class PyTestListener internal constructor() : ScriptParserBaseListener() {
-    var tests: Stack<PyTest> = Stack()
+class PyTestListener internal constructor(private val pyTestFile: File) : ScriptParserBaseListener() {
+    val tests: Stack<PyTest> = Stack()
+    val includedComponents: ArrayList<IncludedComponent> = ArrayList()
+
+    override fun enterIncludeDeclaration(ctx: IncludeDeclarationContext?) {
+
+        if (ctx == null) {
+            logger.debug("Include declaration has missing context, skipping!")
+            return
+        }
+
+        logger.debug("Picked include declaration: {}", ctx.text)
+
+        val includeNames = ctx.includeNames().includeName()
+        val includePath = ctx.stringLiteral()
+
+        val invokedComponentAbsolutePath = File(pyTestFile.parent).resolve(File(includePath.text.replace("'", ""))).canonicalPath
+
+        logger.debug("Included component absolute path: {}", invokedComponentAbsolutePath)
+
+        includeNames.forEach { includeName ->
+            val includedComponent = IncludedComponent(
+                includeName.name.text,
+                includeName?.alias?.text,
+                invokedComponentAbsolutePath
+            )
+            logger.debug("Picked included component: {}", includedComponent)
+            includedComponents.add(includedComponent)
+        }
+    }
 
     override fun enterWorkflowDef(ctx: WorkflowDefContext) {
         val testName = ctx.name.text
@@ -31,7 +61,9 @@ class PyTestListener internal constructor() : ScriptParserBaseListener() {
     override fun enterExpressionStatement(ctx: ExpressionStatementContext) {
         val expression = ctx.expression
 
-        logger.debug("Picked expression with children: {}", expression.children.map { it.javaClass.name.split("\$")[1] })
+        logger.debug(
+            "Picked expression with children: {}",
+            expression.children.map { it.javaClass.name.split("\$")[1] })
 
         if (expression.children.size != 2) {
             logger.debug("Expression ${expression.text} children size is ${ctx.expression.children.size}, skipping!")

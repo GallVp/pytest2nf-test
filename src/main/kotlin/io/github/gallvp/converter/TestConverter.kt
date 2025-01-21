@@ -16,37 +16,43 @@ import kotlin.system.exitProcess
 object TestConverter {
     @kotlin.jvm.JvmStatic
     fun main(args: Array<String>) {
-        var mainPath: String? = null
+        var componentMainPath: String? = null
         var testPath: String? = null
+        var outputPath: String? = null
 
         // Process args
         for (i in args.indices) {
             when (args[i]) {
-                "--main" -> if (i + 1 < args.size) mainPath = args[i + 1]
+                "--main" -> if (i + 1 < args.size) componentMainPath = args[i + 1]
                 "--test" -> if (i + 1 < args.size) testPath = args[i + 1]
+                "--output" -> if (i + 1 < args.size) outputPath = args[i + 1]
             }
         }
 
-        if (mainPath.isNullOrBlank() || testPath.isNullOrBlank()) {
+        if (componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) {
             System.err.println(
                 """
-                Usage: TestConverter --main <main.nf> --test <test.nf>
+                Usage: TestConverter --main <main.nf> --test <test.nf> --output <main.nf.test>
             """.trimIndent()
             )
             exitProcess(1)
         }
 
         // Read files
-        val testFile = File(testPath)
-        val mainFile = File(mainPath)
-        val mainFileRelativePath = mainFile.relativeTo(testFile.parentFile)
+        val pyTestFile = File(testPath)
+        val componentMainFile = File(componentMainPath)
+        val nfTestFile = File(outputPath)
 
-        val mainFileText = mainFile.readText()
+        val mainFileRelativeToNFTestFile = componentMainFile.relativeTo(nfTestFile.parentFile)
+
+        logger.debug("Component main file path relative to nf-test file path: {}", mainFileRelativeToNFTestFile)
+
+        val mainFileText = componentMainFile.readText()
         val componentAttributes = Regex("\\s*(process|workflow)\\s+(\\w+)\\s*\\{").find(mainFileText)?.groupValues
         val componentName = componentAttributes?.get(2)?.lowercase()
         val componentType = componentAttributes?.get(1)?.lowercase()
 
-        require(componentName != null && componentType != null) { "Could not find component name or type in $mainPath" }
+        require(componentName != null && componentType != null) { "Could not find component name or type in $componentMainPath" }
 
         logger.info("Found $componentType: $componentName")
 
@@ -58,7 +64,7 @@ object TestConverter {
         val compilationUnit = nextflowParser.compilationUnit()
 
         // Walk the tree and pick items for nf-test
-        val listener = PyTestListener()
+        val listener = PyTestListener(pyTestFile)
         val extractor = ParseTreeWalker()
         extractor.walk(listener, compilationUnit)
 
@@ -66,11 +72,14 @@ object TestConverter {
         val componentNFTest = ComponentNFTest(
             componentName,
             componentType,
-            mainFileRelativePath.toString(),
-            listener.tests.toList().map { NFTest.from(it, componentName) })
-        File(testFile.parent.plus("/main.nf.test")).writeText(componentNFTest.fileText)
+            mainFileRelativeToNFTestFile.toString(),
+            listener.tests.toList()
+                .map { NFTest.from(it, listener.includedComponents, componentName, nfTestFile) })
 
-        logger.info("Saved nf-test file to ${testFile.parent.plus("/main.nf.test")}")
+        nfTestFile.parentFile.mkdirs()
+        nfTestFile.writeText(componentNFTest.fileText)
+
+        logger.info("Saved nf-test file to ${nfTestFile.name}")
     }
 
     private fun getCharStreamFromFile(filePath: String): CharStream? {

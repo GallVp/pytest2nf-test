@@ -19,7 +19,8 @@ Converts a Nextflow component pytest to nf-test. The Antlr grammar and associate
 ```bash
 ./build/install/pytest2nf-test/bin/pytest2nf-test \
     --main test/cadd/main.nf \
-    --test test/cadd/tests/main.nf
+    --test test/cadd/tests/main.nf \
+    --output test/cadd/tests/main.nf.test
 ```
 
 ## Nextflow Antlr Grammar

@@ -2,6 +2,7 @@ package io.github.gallvp.converter
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.File
 
 data class NFTest(val name: String, val whenBlock: String, val thenBlock: String, val setupBlock: String? = null) {
     override fun toString(): String {
@@ -38,7 +39,7 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
     }
 
     companion object {
-        fun from(pyTest: PyTest, componentName: String): NFTest {
+        fun from(pyTest: PyTest, includedComponents: List<IncludedComponent>, componentName: String, nfTestFile: File): NFTest {
             val targetComponentExpression = pyTest.expressions.filter { it.component.lowercase() == componentName }
 
             require(targetComponentExpression.size == 1) {
@@ -63,18 +64,27 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
                 null
             } else {
                 setupComponents.joinToString("\n\n") { expression ->
-                    val setupComponentName = expression.component
+                    val invokedComponentName = expression.component
                     val componentArguments = expression.arguments
-                    val componentPathName = setupComponentName.replace("_", "/").lowercase()
 
-                    logger.debug("Setup component: {} with arguments: {}", setupComponentName, componentArguments)
+                    logger.debug("Setup component: {} with arguments: {}", invokedComponentName, componentArguments)
+
+                    val invokedComponentRealName = includedComponents.getRealName(invokedComponentName)
+                    val invokedComponentAlias = if(invokedComponentRealName!=invokedComponentName) invokedComponentName else null
+                    val aliasStatement = invokedComponentAlias?.let { ", alias: \"$invokedComponentAlias\"" } ?: ""
+
+                    val invokedComponentPath = includedComponents.find { it.name == invokedComponentRealName }?.absolutePath ?: ""
+
+                    logger.debug("Making path: {} relative to nf-test file: {}", invokedComponentPath, nfTestFile.absolutePath)
+
+                    val invokedComponentRelativePath = File(invokedComponentPath).relativeTo(nfTestFile.parentFile.absoluteFile).path
 
                     val formattedInputs = pyTestArgumentsToNFTestInputs(pyTest, componentArguments).split("\n")
                         .joinToString("\n") { "        $it" }
 
                     """
-                    |run("$setupComponentName") {
-                    |    script "../../../$componentPathName/main.nf"
+                    |run("$invokedComponentRealName"$aliasStatement) {
+                    |    script "$invokedComponentRelativePath"
                     |    process {
                     |        ${"\"\"\""}
                     |$formattedInputs

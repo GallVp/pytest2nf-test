@@ -3,7 +3,7 @@ package io.github.gallvp.converter
 data class ComponentNFTest(
     val name: String,
     val type: String,
-    val relativeScriptPath: String,
+    val mainFileRelativeToTestFilePath: String,
     val tests: List<NFTest>
 ) {
 
@@ -24,7 +24,7 @@ data class ComponentNFTest(
         |nextflow_$type {
         |
         |    name "Test Process $nameInUpper"
-        |    script "$relativeScriptPath"
+        |    script "$mainFileRelativeToTestFilePath"
         |    process "$nameInUpper"
         |   
         |${tags.joinToString("\n") { "    tag \"$it\"" }}
