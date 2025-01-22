@@ -9,37 +9,29 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
 
         val setupBlockComplete = setupBlock?.let { setup ->
             """
-                |
                 |setup {
-                |
                 |${setup.split("\n").joinToString("\n") { "    $it" }}
-                |
                 |}
-                |
             """.trimMargin()
         } ?: ""
 
         return """
                 |test("$name") {
                 |${setupBlockComplete.split("\n").joinToString("\n") { "    $it" }}
-                |    when {
-                |        process {
-                |            ${"\"\"\""}
-                |${whenBlock.split("\n").joinToString("\n") { "            $it" }}
-                |            ${"\"\"\""}
-                |        }    
-                |    }
-                |
-                |    then {
-                |${thenBlock.split("\n").joinToString("\n") { "        $it" }}
-                |    }
-                |
+                |${whenBlock.split("\n").joinToString("\n") { "    $it" }}
+                |${thenBlock.split("\n").joinToString("\n") { "    $it" }}
                 |}
             """.trimMargin()
     }
 
     companion object {
-        fun from(pyTest: PyTest, includedComponents: List<IncludedComponent>, componentName: String, nfTestFile: File): NFTest {
+        fun from(
+            pyTest: PyTest,
+            includedComponents: List<IncludedComponent>,
+            componentName: String,
+            nfTestFile: File,
+            configAssignments: List<ConfigAssignment>?
+        ): NFTest {
             val targetComponentExpression = pyTest.expressions.filter { it.component.lowercase() == componentName }
 
             require(targetComponentExpression.size == 1) {
@@ -52,9 +44,40 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
                 targetComponentExpression.first().arguments
             )
 
-            val inputsBlock = targetComponentExpression.first().arguments.let { args ->
+            val inputs = targetComponentExpression.first().arguments.let { args ->
                 pyTestArgumentsToNFTestInputs(pyTest, args)
             }
+
+            val inputsBlock = """
+                |process {
+                |    ${"\"\"\""}
+                |${inputs.split("\n").joinToString("\n") { "    $it" }}
+                |    ${"\"\"\""}
+                |}
+            """.trimMargin()
+
+            val testProcessConfigAssignments = configAssignments?.filter {
+                it.targetName == targetComponentExpression.first().component
+            }
+
+            logger.debug("Picked test process config assignments: {}", testProcessConfigAssignments)
+
+            val testProcessConfigAssignmentsBlock = if (testProcessConfigAssignments.isNullOrEmpty()) {
+                ""
+            } else {
+                """
+                    |params {
+                    |    module_args = ${testProcessConfigAssignments.first().assignments.first().split("=").last()}
+                    |}
+                """.trimMargin()
+            }
+
+            val whenBlock = """
+                |when {
+                |${testProcessConfigAssignmentsBlock.split("\n").joinToString("\n") { "    $it" }}
+                |${inputsBlock.split("\n").joinToString("\n") { "    $it" }}
+                |}
+            """.trimMargin()
 
             val setupComponents = pyTest.expressions.filter { it.component.lowercase() != componentName }
 
@@ -70,21 +93,45 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
                     logger.debug("Setup component: {} with arguments: {}", invokedComponentName, componentArguments)
 
                     val invokedComponentRealName = includedComponents.getRealName(invokedComponentName)
-                    val invokedComponentAlias = if(invokedComponentRealName!=invokedComponentName) invokedComponentName else null
+                    val invokedComponentAlias =
+                        if (invokedComponentRealName != invokedComponentName) invokedComponentName else null
                     val aliasStatement = invokedComponentAlias?.let { ", alias: \"$invokedComponentAlias\"" } ?: ""
 
-                    val invokedComponentPath = includedComponents.find { it.name == invokedComponentRealName }?.absolutePath ?: ""
+                    val invokedComponentPath =
+                        includedComponents.find { it.name == invokedComponentRealName }?.absolutePath ?: ""
 
-                    logger.debug("Making path: {} relative to nf-test file: {}", invokedComponentPath, nfTestFile.absolutePath)
+                    logger.debug(
+                        "Making path: {} relative to nf-test file: {}",
+                        invokedComponentPath,
+                        nfTestFile.absolutePath
+                    )
 
-                    val invokedComponentRelativePath = File(invokedComponentPath).relativeTo(nfTestFile.parentFile.absoluteFile).path
+                    val invokedComponentRelativePath =
+                        File(invokedComponentPath).relativeTo(nfTestFile.parentFile.absoluteFile).path
 
                     val formattedInputs = pyTestArgumentsToNFTestInputs(pyTest, componentArguments).split("\n")
                         .joinToString("\n") { "        $it" }
 
+                    val setupProcessConfigAssignments = configAssignments?.filter {
+                        it.targetName == invokedComponentName
+                    }
+
+                    logger.debug("Picked setup process config assignments: {}", setupProcessConfigAssignments)
+
+                    val setupProcessConfigAssignmentsBlock = if (setupProcessConfigAssignments.isNullOrEmpty()) {
+                        ""
+                    } else {
+                        """
+                        |params {
+                        |    module_args = ${setupProcessConfigAssignments.first().assignments.first().split("=").last()}
+                        |}
+                        |""".trimMargin()
+                    }
+
                     """
                     |run("$invokedComponentRealName"$aliasStatement) {
                     |    script "$invokedComponentRelativePath"
+                    |${setupProcessConfigAssignmentsBlock.split("\n").joinToString("\n") { "    $it" }}
                     |    process {
                     |        ${"\"\"\""}
                     |$formattedInputs
@@ -95,13 +142,14 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
                 }
             }
 
-            val whenBlock = inputsBlock
 
             val thenBlock = """
-                |assertAll(
-                |    { assert process.success },
-                |    { assert snapshot(process.out).match() }
-                |)
+                |then {
+                |    assertAll(
+                |        { assert process.success },
+                |        { assert snapshot(process.out).match() }
+                |    )
+                |}
                 """.trimMargin()
 
             return NFTest(pyTest.name, whenBlock, thenBlock, setupBlock)

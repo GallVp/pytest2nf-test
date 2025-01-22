@@ -1,5 +1,7 @@
 package io.github.gallvp.converter
 
+import nextflow.script.parser.ConfigLexer
+import nextflow.script.parser.ConfigParser
 import nextflow.script.parser.ScriptLexer
 import nextflow.script.parser.ScriptParser
 import org.antlr.v4.runtime.CharStream
@@ -56,7 +58,7 @@ object TestConverter {
 
         logger.info("Found $componentType: $componentName")
 
-        // Parse test file
+        // Parse pytest file
         val testFileCharStream = getCharStreamFromFile(testPath)
         val nextflowLexer = ScriptLexer(testFileCharStream)
         val tokens = CommonTokenStream(nextflowLexer)
@@ -68,18 +70,50 @@ object TestConverter {
         val extractor = ParseTreeWalker()
         extractor.walk(listener, compilationUnit)
 
+        // Parse nextflow.config file sitting next to pytest file
+        val nextflowConfig = pyTestFile.parentFile.resolve("nextflow.config")
+
+        var configAssignments: List<ConfigAssignment>? = null
+        if (!nextflowConfig.exists()) {
+            logger.debug("No nextflow.config file found in ${pyTestFile.parentFile.path}, skipping!")
+        } else {
+            val nextflowConfigCharStream = getCharStreamFromFile(nextflowConfig.path)
+
+            val nextflowConfigLexer = ConfigLexer(nextflowConfigCharStream)
+            val configTokens = CommonTokenStream(nextflowConfigLexer)
+            val nextflowScriptParser = ConfigParser(configTokens)
+            val configCompilationUnit = nextflowScriptParser.compilationUnit()
+
+            // Walk the tree and pick items for nf-test
+            val configListener = PyTestConfigListener()
+            val configExtractor = ParseTreeWalker()
+            configExtractor.walk(configListener, configCompilationUnit)
+
+            configAssignments = configListener.configAssignments
+        }
+
         // Populate a nf-test file
         val componentNFTest = ComponentNFTest(
             componentName,
             componentType,
             mainFileRelativeToNFTestFile.toString(),
             listener.tests.toList()
-                .map { NFTest.from(it, listener.includedComponents, componentName, nfTestFile) })
+                .map { NFTest.from(it, listener.includedComponents, componentName, nfTestFile, configAssignments) },
+            !configAssignments.isNullOrEmpty(),
+        )
 
         nfTestFile.parentFile.mkdirs()
         nfTestFile.writeText(componentNFTest.fileText)
 
-        logger.info("Saved nf-test file to ${nfTestFile.name}")
+        logger.info("Saved nf-test file to ${nfTestFile.path}")
+
+        // Populate a nf-test config file
+        if (!configAssignments.isNullOrEmpty()) {
+            val configFile = nfTestFile.parentFile.resolve("nextflow.test.config")
+            configFile.writeText(configAssignments.configText)
+
+            logger.info("Saved nf-test config file to ${configFile.path}")
+        }
     }
 
     private fun getCharStreamFromFile(filePath: String): CharStream? {

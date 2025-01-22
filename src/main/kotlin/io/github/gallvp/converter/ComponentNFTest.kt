@@ -4,7 +4,8 @@ data class ComponentNFTest(
     val name: String,
     val type: String,
     val mainFileRelativeToTestFilePath: String,
-    val tests: List<NFTest>
+    val tests: List<NFTest>,
+    val hasConfig: Boolean,
 ) {
 
     private val nameInUpper = name.uppercase()
@@ -24,6 +25,7 @@ data class ComponentNFTest(
         |nextflow_$type {
         |
         |    name "Test Process $nameInUpper"
+        |    ${if(hasConfig) "./nextflow.test.config" else ""}
         |    script "$mainFileRelativeToTestFilePath"
         |    process "$nameInUpper"
         |   

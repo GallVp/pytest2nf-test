@@ -1,6 +1,7 @@
 nextflow_process {
 
     name "Test Process AMPS"
+    ./nextflow.test.config
     script "../main.nf"
     process "AMPS"
    
@@ -8,11 +9,10 @@ nextflow_process {
     tag "amps"
    
     test("test_amps") {
-        
         setup {
-        
             run("UNZIP", alias: "UNZIP_MALT") {
                 script "../../../../modules/nf-core/unzip/main.nf"
+                
                 process {
                     """
                     input[0] = [[],file("s3://ngi-igenomes/test-data/createtaxdb/taxonomy/megan-nucl-Feb2022.db.zip",checkIfExists:true)]
@@ -22,6 +22,7 @@ nextflow_process {
             
             run("UNZIP", alias: "UNZIP_MALTEXTRACT") {
                 script "../../../../modules/nf-core/unzip/main.nf"
+                
                 process {
                     """
                     input[0] = [[],file(params.test_data['sarscov2']['genome']['ncbi_taxmap_zip'],checkIfExists:true)]
@@ -31,6 +32,10 @@ nextflow_process {
             
             run("MALT_BUILD") {
                 script "../../../../modules/nf-core/malt/build/main.nf"
+                params {
+                    module_args = "--sequenceType DNA"
+                }
+                
                 process {
                     """
                     input[0] = file(params.test_data['sarscov2']['genome']['genome_fasta'],checkIfExists:true)
@@ -42,6 +47,10 @@ nextflow_process {
             
             run("MALT_RUN") {
                 script "../../../../modules/nf-core/malt/run/main.nf"
+                params {
+                    module_args = "-m BlastN -J-Xmx8G"
+                }
+                
                 process {
                     """
                     input[0] = [
@@ -55,6 +64,10 @@ nextflow_process {
             
             run("MALTEXTRACT") {
                 script "../../../../modules/nf-core/maltextract/main.nf"
+                params {
+                    module_args = '-f def_anc'
+                }
+                
                 process {
                     """
                     input[0] = MALT_RUN.out.rma6.map{it[1]}
@@ -63,25 +76,22 @@ nextflow_process {
                     """
                 }
             }
-        
         }
-        
         when {
+            
             process {
                 """
                 input[0] = MALTEXTRACT.out.results
                 input[1] = file(params.test_data['sarscov2']['genome']['taxon_list_txt'],checkIfExists:true)
                 input[2] = false
                 """
-            }    
+            }
         }
-    
         then {
             assertAll(
                 { assert process.success },
                 { assert snapshot(process.out).match() }
             )
         }
-    
     }
 }
