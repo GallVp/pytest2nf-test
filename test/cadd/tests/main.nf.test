@@ -10,6 +10,29 @@ nextflow_process {
    
     test("test_cadd") {
         
+        
+        when {
+            
+            process {
+                """
+                input[0] = [
+                    [id:'test',single_end:false],// meta map
+                    file(params.test_data['homo_sapiens']['illumina']['test_genome_vcf'],checkIfExists:true)
+                    ]
+                input[1] = file("$PWD")
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+    test("test_cadd -- stub") {
+        options '-stub'
+        
         when {
             
             process {
