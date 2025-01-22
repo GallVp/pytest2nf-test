@@ -3,8 +3,9 @@ package io.github.gallvp.converter
 data class ComponentNFTest(
     val name: String,
     val type: String,
-    val relativeScriptPath: String,
-    val tests: List<NFTest>
+    val mainFileRelativeToTestFilePath: String,
+    val tests: List<NFTest>,
+    val hasConfig: Boolean,
 ) {
 
     private val nameInUpper = name.uppercase()
@@ -24,7 +25,8 @@ data class ComponentNFTest(
         |nextflow_$type {
         |
         |    name "Test Process $nameInUpper"
-        |    script "$relativeScriptPath"
+        |    ${if(hasConfig) "./nextflow.test.config" else ""}
+        |    script "$mainFileRelativeToTestFilePath"
         |    process "$nameInUpper"
         |   
         |${tags.joinToString("\n") { "    tag \"$it\"" }}

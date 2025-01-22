@@ -1,6 +1,7 @@
 nextflow_process {
 
     name "Test Process CADD"
+    
     script "../main.nf"
     process "CADD"
    
@@ -8,7 +9,9 @@ nextflow_process {
     tag "cadd"
    
     test("test_cadd") {
+        
         when {
+            
             process {
                 """
                 input[0] = [
@@ -17,7 +20,7 @@ nextflow_process {
                     ]
                 input[1] = file("$PWD")
                 """
-            }    
+            }
         }
         then {
             assertAll(
