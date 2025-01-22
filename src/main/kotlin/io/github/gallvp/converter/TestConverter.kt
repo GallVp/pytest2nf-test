@@ -53,6 +53,7 @@ object TestConverter {
         val componentAttributes = Regex("\\s*(process|workflow)\\s+(\\w+)\\s*\\{").find(mainFileText)?.groupValues
         val componentName = componentAttributes?.get(2)?.lowercase()
         val componentType = componentAttributes?.get(1)?.lowercase()
+        val componentHasStub = Regex("\\s*stub:\\s*").containsMatchIn(mainFileText)
 
         require(componentName != null && componentType != null) { "Could not find component name or type in $componentMainPath" }
 
@@ -93,12 +94,29 @@ object TestConverter {
         }
 
         // Populate a nf-test file
+        val nfTests = listener.tests.toList()
+            .map { NFTest.from(it, listener.includedComponents, componentName, nfTestFile, configAssignments, false) }
+            .toMutableList()
+
+        if (componentHasStub) {
+            nfTests += listener.tests.toList()
+                .map {
+                    NFTest.from(
+                        it,
+                        listener.includedComponents,
+                        componentName,
+                        nfTestFile,
+                        configAssignments,
+                        true
+                    )
+                }
+        }
+
         val componentNFTest = ComponentNFTest(
             componentName,
             componentType,
             mainFileRelativeToNFTestFile.toString(),
-            listener.tests.toList()
-                .map { NFTest.from(it, listener.includedComponents, componentName, nfTestFile, configAssignments) },
+            nfTests,
             !configAssignments.isNullOrEmpty(),
         )
 

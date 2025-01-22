@@ -9,6 +9,7 @@ nextflow_process {
     tag "amps"
    
     test("test_amps") {
+        
         setup {
             run("UNZIP", alias: "UNZIP_MALT") {
                 script "../../../../modules/nf-core/unzip/main.nf"

@@ -4,7 +4,13 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 
-data class NFTest(val name: String, val whenBlock: String, val thenBlock: String, val setupBlock: String? = null) {
+data class NFTest(
+    val name: String,
+    val whenBlock: String,
+    val thenBlock: String,
+    val setupBlock: String? = null,
+    val addStubOption: Boolean = false
+) {
     override fun toString(): String {
 
         val setupBlockComplete = setupBlock?.let { setup ->
@@ -15,8 +21,12 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
             """.trimMargin()
         } ?: ""
 
+        val stubOptionText = if (addStubOption) "options '-stub'" else ""
+        val stubNamePostfix = if (addStubOption) " -- stub" else ""
+
         return """
-                |test("$name") {
+                |test("$name$stubNamePostfix") {
+                |    $stubOptionText
                 |${setupBlockComplete.split("\n").joinToString("\n") { "    $it" }}
                 |${whenBlock.split("\n").joinToString("\n") { "    $it" }}
                 |${thenBlock.split("\n").joinToString("\n") { "    $it" }}
@@ -30,7 +40,8 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
             includedComponents: List<IncludedComponent>,
             componentName: String,
             nfTestFile: File,
-            configAssignments: List<ConfigAssignment>?
+            configAssignments: List<ConfigAssignment>?,
+            addStubOption: Boolean
         ): NFTest {
             val targetComponentExpression = pyTest.expressions.filter { it.component.lowercase() == componentName }
 
@@ -123,7 +134,9 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
                     } else {
                         """
                         |params {
-                        |    module_args = ${setupProcessConfigAssignments.first().assignments.first().split("=").last()}
+                        |    module_args = ${
+                            setupProcessConfigAssignments.first().assignments.first().split("=").last()
+                        }
                         |}
                         |""".trimMargin()
                     }
@@ -152,7 +165,7 @@ data class NFTest(val name: String, val whenBlock: String, val thenBlock: String
                 |}
                 """.trimMargin()
 
-            return NFTest(pyTest.name, whenBlock, thenBlock, setupBlock)
+            return NFTest(pyTest.name, whenBlock, thenBlock, setupBlock, addStubOption)
         }
 
         private fun pyTestArgumentsToNFTestInputs(pyTest: PyTest, arguments: List<String>): String =
