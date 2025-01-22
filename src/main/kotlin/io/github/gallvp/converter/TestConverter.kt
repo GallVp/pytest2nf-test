@@ -95,7 +95,7 @@ object TestConverter {
 
         // Populate a nf-test file
         val nfTests = listener.tests.toList()
-            .map { NFTest.from(it, listener.includedComponents, componentName, nfTestFile, configAssignments, false) }
+            .map { NFTest.from(it, listener.includedComponents, componentName, nfTestFile, configAssignments, componentHasStub, false) }
             .toMutableList()
 
         if (componentHasStub) {
@@ -107,6 +107,7 @@ object TestConverter {
                         componentName,
                         nfTestFile,
                         configAssignments,
+                        true,
                         true
                     )
                 }

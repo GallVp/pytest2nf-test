@@ -25,7 +25,7 @@ data class ComponentNFTest(
         |nextflow_$type {
         |
         |    name "Test Process $nameInUpper"
-        |    ${if(hasConfig) "./nextflow.test.config" else ""}
+        |    ${if(hasConfig) "config \"./nextflow.test.config\"" else ""}
         |    script "$mainFileRelativeToTestFilePath"
         |    process "$nameInUpper"
         |   

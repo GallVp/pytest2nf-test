@@ -9,11 +9,12 @@ data class NFTest(
     val whenBlock: String,
     val thenBlock: String,
     val setupBlock: String? = null,
+    val shareSetup: Boolean = false,
     val addStubOption: Boolean = false
 ) {
     override fun toString(): String {
 
-        val setupBlockComplete = setupBlock?.let { setup ->
+        val setupBlockComplete = if (shareSetup && addStubOption) "" else setupBlock?.let { setup ->
             """
                 |setup {
                 |${setup.split("\n").joinToString("\n") { "    $it" }}
@@ -24,7 +25,15 @@ data class NFTest(
         val stubOptionText = if (addStubOption) "options '-stub'" else ""
         val stubNamePostfix = if (addStubOption) " -- stub" else ""
 
-        return """
+        return if (shareSetup) """
+                |${setupBlockComplete.split("\n").joinToString("\n")}
+                |
+                |test("$name$stubNamePostfix") {
+                |    $stubOptionText
+                |${whenBlock.split("\n").joinToString("\n") { "    $it" }}
+                |${thenBlock.split("\n").joinToString("\n") { "    $it" }}
+                |}
+            """.trimMargin() else """
                 |test("$name$stubNamePostfix") {
                 |    $stubOptionText
                 |${setupBlockComplete.split("\n").joinToString("\n") { "    $it" }}
@@ -41,6 +50,7 @@ data class NFTest(
             componentName: String,
             nfTestFile: File,
             configAssignments: List<ConfigAssignment>?,
+            shareSetup: Boolean,
             addStubOption: Boolean
         ): NFTest {
             val targetComponentExpression = pyTest.expressions.filter { it.component.lowercase() == componentName }
@@ -165,7 +175,7 @@ data class NFTest(
                 |}
                 """.trimMargin()
 
-            return NFTest(pyTest.name, whenBlock, thenBlock, setupBlock, addStubOption)
+            return NFTest(pyTest.name, whenBlock, thenBlock, setupBlock, shareSetup, addStubOption)
         }
 
         private fun pyTestArgumentsToNFTestInputs(pyTest: PyTest, arguments: List<String>): String =
