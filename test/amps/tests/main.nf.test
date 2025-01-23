@@ -6,6 +6,10 @@ nextflow_process {
     process "AMPS"
    
     tag "modules"
+    tag "unzip"
+    tag "malt/build"
+    tag "malt/run"
+    tag "maltextract"
     tag "amps"
    
     setup {

@@ -95,7 +95,17 @@ object TestConverter {
 
         // Populate a nf-test file
         val nfTests = listener.tests.toList()
-            .map { NFTest.from(it, listener.includedComponents, componentName, nfTestFile, configAssignments, componentHasStub, false) }
+            .map {
+                NFTest.from(
+                    it,
+                    listener.includedComponents,
+                    componentName,
+                    nfTestFile,
+                    configAssignments,
+                    componentHasStub,
+                    false
+                )
+            }
             .toMutableList()
 
         if (componentHasStub) {
@@ -113,12 +123,19 @@ object TestConverter {
                 }
         }
 
+        val testTags =
+            listOf(if (componentType == "workflow") "subworkflows" else "modules") + listener.includedComponents.map {
+                it.name.lowercase().replace("_", "/")
+            }
+                .toSet()
+
         val componentNFTest = ComponentNFTest(
             componentName,
             componentType,
             mainFileRelativeToNFTestFile.toString(),
             nfTests,
             !configAssignments.isNullOrEmpty(),
+            testTags
         )
 
         nfTestFile.parentFile.mkdirs()

@@ -8,9 +8,9 @@ data class NFTest(
     val name: String,
     val whenBlock: String,
     val thenBlock: String,
-    val setupBlock: String? = null,
-    val shareSetup: Boolean = false,
-    val addStubOption: Boolean = false
+    val setupBlock: String?,
+    val shareSetup: Boolean,
+    val addStubOption: Boolean
 ) {
     override fun toString(): String {
 

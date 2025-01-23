@@ -6,32 +6,24 @@ data class ComponentNFTest(
     val mainFileRelativeToTestFilePath: String,
     val tests: List<NFTest>,
     val hasConfig: Boolean,
+    val tags: List<String>
 ) {
 
     private val nameInUpper = name.uppercase()
-    private val tags: List<String>
-        get() {
-            val default = listOf("modules")
-
-            return if (this.name.split("/").size == 1) {
-                default + listOf(this.name)
-            } else {
-                default + listOf(this.name.split("/").first(), this.name)
-            }
-        }
+    private val tagsText = tags.joinToString("\n") { "tag \"$it\"" }
 
     val fileText: String
         get() = """
         |nextflow_$type {
         |
         |    name "Test Process $nameInUpper"
-        |    ${if(hasConfig) "config \"./nextflow.test.config\"" else ""}
+        |    ${if (hasConfig) "config \"./nextflow.test.config\"" else ""}
         |    script "$mainFileRelativeToTestFilePath"
         |    process "$nameInUpper"
         |   
-        |${tags.joinToString("\n") { "    tag \"$it\"" }}
+        |${tagsText.split("\n").joinToString("\n") { "    $it" }}
         |   
-        |${tests.joinToString("\n") { "$it" }.split("\n").joinToString("\n") { "    $it"}}
+        |${tests.joinToString("\n") { "$it" }.split("\n").joinToString("\n") { "    $it" }}
         |}
         """.trimMargin()
 }
