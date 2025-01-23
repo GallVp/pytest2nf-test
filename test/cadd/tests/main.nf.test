@@ -8,8 +8,9 @@ nextflow_process {
     tag "modules"
     tag "cadd"
    
+    
+    
     test("test_cadd") {
-        
         
         when {
             
@@ -30,9 +31,10 @@ nextflow_process {
             )
         }
     }
+    
+    
     test("test_cadd -- stub") {
         options '-stub'
-        
         when {
             
             process {

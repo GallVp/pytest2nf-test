@@ -18,7 +18,7 @@ class ModuleTests {
 
         val outputPath: Path = Paths.get("test/cadd/tests/main.nf.test")
 
-        val expectedMD5 = "e4183b63baa548c2b2642b666bef508c"
+        val expectedMD5 = "3e9c80f922e4a4e0e5dee58e005fcfb1"
 
         val args = arrayOf("--main", "$mainPath", "--test", "$pyTestMainPath", "--output", "$nfTestMainPath")
         TestConverter.main(args)
@@ -37,7 +37,7 @@ class ModuleTests {
         val outputPath: Path = Paths.get("test/amps/tests/main.nf.test")
         val outputConfigPath = Paths.get("test/amps/tests/nextflow.test.config")
 
-        val expectedMD5 = "7f32e77e8943e6cfffa9b393ba5a0563"
+        val expectedMD5 = "dea70d1e0a1d9aafe645f4960985462d"
         val expectedConfigMD5 = "51ffd764fcb8d79f68be4b1afd4b6437"
 
         val args = arrayOf("--main", "$mainPath", "--test", "$pyTestMainPath", "--output", "$nfTestMainPath")
