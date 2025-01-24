@@ -37,7 +37,7 @@ class ModuleTests {
         val outputPath: Path = Paths.get("test/amps/tests/main.nf.test")
         val outputConfigPath = Paths.get("test/amps/tests/nextflow.test.config")
 
-        val expectedMD5 = "dea70d1e0a1d9aafe645f4960985462d"
+        val expectedMD5 = "a8cee708b4517878f1746ae74d9d0fc1"
         val expectedConfigMD5 = "51ffd764fcb8d79f68be4b1afd4b6437"
 
         val args = arrayOf("--main", "$mainPath", "--test", "$pyTestMainPath", "--output", "$nfTestMainPath")
