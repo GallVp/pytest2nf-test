@@ -53,21 +53,21 @@ data class NFTest(
             shareSetup: Boolean,
             addStubOption: Boolean
         ): NFTest {
-            val targetComponentExpression = pyTest.expressions.filter { it.component.lowercase() == componentName }
+            val targetComponentExpression = pyTest.expressions.last()
+            val targetComponentName = includedComponents.getRealName(targetComponentExpression.component)
 
-            require(targetComponentExpression.size == 1) {
-                "None of the expressions in pytest ${pyTest.name} matches the component name $componentName"
+            require(targetComponentName.lowercase() == componentName) {
+                "This pytest ${pyTest.name} can not be converted as the final component call $targetComponentName" +
+                        " is not the target test component $componentName"
             }
 
             logger.debug(
                 "Building inputs block for {} with arguments: {}",
                 pyTest.name,
-                targetComponentExpression.first().arguments
+                targetComponentExpression.arguments
             )
 
-            val inputs = targetComponentExpression.first().arguments.let { args ->
-                pyTestArgumentsToNFTestInputs(pyTest, args)
-            }
+            val inputs = pyTestArgumentsToNFTestInputs(pyTest, targetComponentExpression.arguments)
 
             val inputsBlock = """
                 |process {
@@ -78,7 +78,7 @@ data class NFTest(
             """.trimMargin()
 
             val testProcessConfigAssignments = configAssignments?.filter {
-                it.targetName == targetComponentExpression.first().component
+                it.targetName == targetComponentExpression.component
             }
 
             logger.debug("Picked test process config assignments: {}", testProcessConfigAssignments)
@@ -100,7 +100,7 @@ data class NFTest(
                 |}
             """.trimMargin()
 
-            val setupComponents = pyTest.expressions.filter { it.component.lowercase() != componentName }
+            val setupComponents = pyTest.expressions.take(pyTest.expressions.size - 1)
 
             logger.debug("Setup components: {}", setupComponents.map { it.component })
 

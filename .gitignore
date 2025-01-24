@@ -4,5 +4,6 @@
 .kotlin/
 build/
 target/
+bin/
 
 .DS_Store
