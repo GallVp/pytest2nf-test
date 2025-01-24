@@ -81,11 +81,18 @@ data class NFTest(
                 it.targetName == targetComponentExpression.component
             }
 
-            logger.debug("Picked test process config assignments: {}", testProcessConfigAssignments)
+            logger.debug("Picked target test process config assignments: {}", testProcessConfigAssignments)
 
             val testProcessConfigAssignmentsBlock = if (testProcessConfigAssignments.isNullOrEmpty()) {
-                ""
+                """
+                    |params {
+                    |    module_args = ''
+                    |}
+                """.trimMargin()
             } else {
+                testProcessConfigAssignments.map {
+                    it.isForTargetComponent = true
+                }
                 """
                     |params {
                     |    module_args = ${testProcessConfigAssignments.first().assignments.first().split("=").last()}

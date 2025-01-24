@@ -125,9 +125,20 @@ object TestConverter {
 
         val testTags =
             listOf(if (componentType == "workflow") "subworkflows" else "modules") + listener.includedComponents.map {
-                it.name.lowercase().replace("_", "/")
-            }
-                .toSet()
+                val normalised = it.name.lowercase().replace("_", "/")
+                val component = if (normalised.contains("/")) {
+                    normalised.split("/")[0]
+                } else {
+                    normalised
+                }
+                val subComponent = if (normalised.contains("/")) {
+                    normalised
+                } else {
+                    null
+                }
+
+                listOf(component, subComponent)
+            }.flatten().filterNotNull().toSet()
 
         val componentNFTest = ComponentNFTest(
             componentName,
@@ -146,7 +157,7 @@ object TestConverter {
         // Populate a nf-test config file
         if (!configAssignments.isNullOrEmpty()) {
             val configFile = nfTestFile.parentFile.resolve("nextflow.test.config")
-            configFile.writeText(configAssignments.configText)
+            configFile.writeText(configAssignments.getConfigText(listener.includedComponents))
 
             logger.info("Saved nf-test config file to ${configFile.path}")
         }
