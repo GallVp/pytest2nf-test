@@ -85,7 +85,9 @@ nextflow_process {
     test("test_amps") {
         
         when {
-            
+            params {
+                module_args = ''
+            }
             process {
                 """
                 input[0] = MALTEXTRACT.out.results
@@ -106,7 +108,9 @@ nextflow_process {
     test("test_amps -- stub") {
         options '-stub'
         when {
-            
+            params {
+                module_args = ''
+            }
             process {
                 """
                 input[0] = MALTEXTRACT.out.results

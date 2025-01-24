@@ -84,7 +84,11 @@ data class NFTest(
             logger.debug("Picked target test process config assignments: {}", testProcessConfigAssignments)
 
             val testProcessConfigAssignmentsBlock = if (testProcessConfigAssignments.isNullOrEmpty()) {
-                ""
+                """
+                    |params {
+                    |    module_args = ''
+                    |}
+                """.trimMargin()
             } else {
                 testProcessConfigAssignments.map {
                     it.isForTargetComponent = true
