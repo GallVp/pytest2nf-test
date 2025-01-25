@@ -16,7 +16,7 @@ fun List<ConfigAssignment>.getConfigText(includedComponents: List<IncludedCompon
 
         """
             |withName: "$targetName" {
-            |    ${it.assignments.joinToString("\n") { "ext.args = " + "params.module_args" }}
+            |    ${it.assignments.filter { assignment -> assignment.contains("ext.args") }.joinToString("\n") { "ext.args = " + "params.module_args" }}
             |}
         """.trimMargin()
     }
