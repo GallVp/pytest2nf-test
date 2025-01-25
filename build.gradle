@@ -12,8 +12,8 @@ plugins {
 }
 
 group = 'io.github.gallvp'
-version = '1.0-SNAPSHOT'
-description = 'nxf-pytest2nf-test'
+version = '0.0.1'
+description = 'pytest2nf-test: Converts a Nextflow component pytest to nf-test'
 
 repositories {
   mavenCentral()
