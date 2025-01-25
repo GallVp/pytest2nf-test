@@ -1,6 +1,6 @@
 # pytest2nf-test
 
-Converts a Nextflow component pytest to nf-test. The Antlr grammar and associated Java classed are taken from the [nextflow/language-server](https://github.com/nextflow-io/language-server). The converter code is written in Kotlin which is compiled into Java byte code for execution on Java Runtime.  
+Converts a Nextflow component pytest to nf-test. The Antlr grammar and associated Java classes are taken from the [nextflow/language-server](https://github.com/nextflow-io/language-server). The converter code is written in Kotlin which is compiled into Java byte code for execution on Java Runtime.  
 
 ## Assumptions
 
