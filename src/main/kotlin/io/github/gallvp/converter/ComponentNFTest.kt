@@ -13,17 +13,21 @@ data class ComponentNFTest(
     private val tagsText = tags.joinToString("\n") { "tag \"$it\"" }
 
     val fileText: String
-        get() = """
-        |nextflow_$type {
-        |
-        |    name "Test Process $nameInUpper"
-        |    ${if (hasConfig) "config \"./nextflow.test.config\"" else ""}
-        |    script "$mainFileRelativeToTestFilePath"
-        |    process "$nameInUpper"
-        |   
-        |${tagsText.split("\n").joinToString("\n") { "    $it" }}
-        |   
-        |${tests.joinToString("\n") { "$it" }.split("\n").joinToString("\n") { "    $it" }}
-        |}
-        """.trimMargin()
+        get() {
+
+            val typeName = if (type == "process") "Process" else "Workflow"
+
+            return """
+            |nextflow_$type {
+            |
+            |    name "Test $typeName $nameInUpper"
+            |    ${if (hasConfig) "config \"./nextflow.test.config\"" else ""}
+            |    script "$mainFileRelativeToTestFilePath"
+            |    $type "$nameInUpper"
+            |   
+            |${tagsText.split("\n").joinToString("\n") { "    $it" }}
+            |   
+            |${tests.joinToString("\n") { "$it" }.split("\n").joinToString("\n") { "    $it" }}
+            |}""".trimMargin()
+        }
 }

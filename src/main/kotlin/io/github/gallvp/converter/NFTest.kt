@@ -48,6 +48,7 @@ data class NFTest(
             pyTest: PyTest,
             includedComponents: List<IncludedComponent>,
             componentName: String,
+            componentType: String,
             nfTestFile: File,
             configAssignments: List<ConfigAssignment>?,
             shareSetup: Boolean,
@@ -70,7 +71,7 @@ data class NFTest(
             val inputs = pyTestArgumentsToNFTestInputs(pyTest, targetComponentExpression.arguments)
 
             val inputsBlock = """
-                |process {
+                |$componentType {
                 |    ${"\"\"\""}
                 |${inputs.split("\n").joinToString("\n") { "    $it" }}
                 |    ${"\"\"\""}
@@ -83,7 +84,9 @@ data class NFTest(
 
             logger.debug("Picked target test process config assignments: {}", testProcessConfigAssignments)
 
-            val testProcessConfigAssignmentsBlock = if (testProcessConfigAssignments.isNullOrEmpty()) {
+            val testProcessConfigAssignmentsBlock = if (componentType != "process") {
+                ""
+            } else if (testProcessConfigAssignments.isNullOrEmpty()) {
                 """
                     |params {
                     |    module_args = ''
@@ -140,20 +143,25 @@ data class NFTest(
                     val formattedInputs = pyTestArgumentsToNFTestInputs(pyTest, componentArguments).split("\n")
                         .joinToString("\n") { "        $it" }
 
-                    val setupProcessConfigAssignments = configAssignments?.filter {
+                    val setupProcessConfigAssignment = configAssignments?.firstOrNull() {
                         it.targetName == invokedComponentName
                     }
 
-                    logger.debug("Picked setup process config assignments: {}", setupProcessConfigAssignments)
+                    logger.debug("Picked setup process config assignment: {}", setupProcessConfigAssignment)
 
-                    val setupProcessConfigAssignmentsBlock = if (setupProcessConfigAssignments.isNullOrEmpty()) {
+                    val configArgsAssignment =
+                        setupProcessConfigAssignment?.assignments?.firstOrNull { it.contains("ext.args") } ?: ""
+
+                    logger.debug("Picked setup process config args assignment: {}", configArgsAssignment)
+
+                    val setupProcessConfigAssignmentsBlock = if (configArgsAssignment == "") {
                         ""
                     } else {
+                        val assignmentValue = configArgsAssignment.split("=").drop(1).joinToString("=")
+                        val moduleArgsAssignment = "module_args = $assignmentValue"
                         """
                         |params {
-                        |    module_args = ${
-                            setupProcessConfigAssignments.first().assignments.first().split("=").last()
-                        }
+                        |${moduleArgsAssignment.split("\n").joinToString("\n") { "    $it"}}
                         |}
                         |""".trimMargin()
                     }
@@ -176,8 +184,8 @@ data class NFTest(
             val thenBlock = """
                 |then {
                 |    assertAll(
-                |        { assert process.success },
-                |        { assert snapshot(process.out).match() }
+                |        { assert $componentType.success },
+                |        { assert snapshot($componentType.out).match() }
                 |    )
                 |}
                 """.trimMargin()

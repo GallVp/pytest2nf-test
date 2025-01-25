@@ -8,11 +8,17 @@ data class PyTest(
 ) {
 
     fun variableAssignedValue(variableName: String): String? {
-        return this.assignments.firstOrNull { it.variableName == variableName }?.variableAssignment
+
+        val variableNameWithoutOperators = variableName.split(".").first()
+        val operators = variableName.split(".").drop(1).joinToString(".")
+        val assignedValue =
+            this.assignments.firstOrNull { variableNameWithoutOperators == it.variableName }?.variableAssignment
+
+        return if (operators == "") assignedValue else "$assignedValue.$operators"
     }
 
     fun variableHasAssignedValue(variableName: String): Boolean {
-        return this.assignments.any { it.variableName == variableName }
+        return this.assignments.any { variableName.split(".").first() == it.variableName }
     }
 
     companion object {

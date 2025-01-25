@@ -100,6 +100,7 @@ object TestConverter {
                     it,
                     listener.includedComponents,
                     componentName,
+                    componentType,
                     nfTestFile,
                     configAssignments,
                     componentHasStub,
@@ -115,6 +116,7 @@ object TestConverter {
                         it,
                         listener.includedComponents,
                         componentName,
+                        componentType,
                         nfTestFile,
                         configAssignments,
                         true,
@@ -125,6 +127,11 @@ object TestConverter {
 
         val testTags =
             listOf(if (componentType == "workflow") "subworkflows" else "modules") + listener.includedComponents.map {
+
+                if (componentType == "workflow" && it.name.lowercase() == componentName) {
+                    return@map listOf(componentName)
+                }
+
                 val normalised = it.name.lowercase().replace("_", "/")
                 val component = if (normalised.contains("/")) {
                     normalised.split("/")[0]
