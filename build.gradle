@@ -12,7 +12,7 @@ plugins {
 }
 
 group = 'io.github.gallvp'
-version = '0.0.1'
+version = '0.0.2'
 description = 'pytest2nf-test: Converts a Nextflow component pytest to nf-test'
 
 repositories {
