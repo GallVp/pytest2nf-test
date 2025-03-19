@@ -10,10 +10,12 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.yaml.snakeyaml.DumperOptions
 import java.io.File
 import java.io.IOException
 import java.nio.file.Paths
 import kotlin.system.exitProcess
+import org.yaml.snakeyaml.Yaml
 
 object TestConverter {
     @kotlin.jvm.JvmStatic
@@ -39,7 +41,7 @@ object TestConverter {
                 Usage:
                 pytest2nf-test --nf-core-module tool/subtool
                 e.g. pytest2nf-test --nf-core-module canu
-                e.g. pytest2nf-test --nf-core-module cooler/balance
+                e.g. pytest2nf-test --nf-core-module elprep/merge
                 Or,
                 pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
             """.trimIndent()
@@ -53,7 +55,7 @@ object TestConverter {
                 Usage:
                 pytest2nf-test --nf-core-module tool/subtool
                 e.g. pytest2nf-test --nf-core-module canu
-                e.g. pytest2nf-test --nf-core-module cooler/balance
+                e.g. pytest2nf-test --nf-core-module elprep/merge
                 Or,
                 pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
             """.trimIndent()
@@ -73,7 +75,7 @@ object TestConverter {
                 Usage:
                 pytest2nf-test --nf-core-module tool/subtool
                 e.g. pytest2nf-test --nf-core-module canu
-                e.g. pytest2nf-test --nf-core-module cooler/balance
+                e.g. pytest2nf-test --nf-core-module elprep/merge
                 Or,
                 pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
             """.trimIndent()
@@ -217,6 +219,20 @@ object TestConverter {
 
             logger.info("Saved nf-test config file to ${configFile.path}")
         }
+
+        // Delete the test directory if it is nf-core/module
+        if (!nfCoreModuleName.isNullOrBlank()) {
+            val pyTestDirectory = pyTestFile.parentFile
+
+            logger.info("Deleting $pyTestDirectory")
+
+            pyTestDirectory.deleteRecursively()
+        }
+
+        // Delete the pytest entry from tests yml
+        if (!nfCoreModuleName.isNullOrBlank()) {
+            deleteYamlKey(nfCoreModuleName)
+        }
     }
 
     private fun getCharStreamFromFile(filePath: String): CharStream? {
@@ -226,6 +242,29 @@ object TestConverter {
             e.printStackTrace()
             null
         }
+    }
+
+    private fun deleteYamlKey(keyToDelete: String) {
+
+        val options = DumperOptions().apply {
+            defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+            indent = 4
+            indicatorIndent = 2
+            defaultScalarStyle = DumperOptions.ScalarStyle.PLAIN
+        }
+
+        val yaml = Yaml(options)
+        val file = File("tests/config/pytest_modules.yml")
+
+        val data: MutableMap<String, Any> = yaml.load(file.readText()) ?: mutableMapOf()
+
+        if (data.remove(keyToDelete) != null) {
+            logger.info("Key '$keyToDelete' removed successfully from pytest_modules.yml")
+        } else {
+            logger.debug("Key '$keyToDelete' not found in pytest_modules.yml")
+        }
+
+        file.writeText(yaml.dump(data))
     }
 
     private val logger: Logger = LoggerFactory.getLogger(TestConverter::class.java)
