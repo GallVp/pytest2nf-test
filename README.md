@@ -13,14 +13,26 @@ Converts a Nextflow component pytest to nf-test. The Antlr grammar and associate
 ```bash
 ./gradlew installDist
 ```
+The built executable is placed at `./build/install/pytest2nf-test/bin/pytest2nf-test` directory. It can also be moved to a directory which on PATH. It is preferable to move the executable to a directory which is on PATH or add the `./build/install/pytest2nf-test/bin` directory to PATH.
 
 ## Test
+
+### General module
 
 ```bash
 ./build/install/pytest2nf-test/bin/pytest2nf-test \
     --main test/cadd/main.nf \
-    --test test/cadd/tests/main.nf \
+    --test test/cadd/tests/pytest/main.nf \
     --output test/cadd/tests/main.nf.test
+```
+
+### nf-core module
+
+From the nf-core/modules directory,
+
+```
+/path/to/build/install/pytest2nf-test/bin/pytest2nf-test \
+    --nf-core-module canu
 ```
 
 ## Nextflow Antlr Grammar
