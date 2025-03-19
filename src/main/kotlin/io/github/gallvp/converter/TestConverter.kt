@@ -163,7 +163,7 @@ object TestConverter {
 
         // Populate a nf-test config file
         if (!configAssignments.isNullOrEmpty()) {
-            val configFile = nfTestFile.parentFile.resolve("nextflow.test.config")
+            val configFile = nfTestFile.parentFile.resolve("nextflow.config")
             configFile.writeText(configAssignments.getConfigText(listener.includedComponents))
 
             logger.info("Saved nf-test config file to ${configFile.path}")
