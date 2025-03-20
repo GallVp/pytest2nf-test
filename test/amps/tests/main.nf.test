@@ -1,7 +1,7 @@
 nextflow_process {
 
     name "Test Process AMPS"
-    config "./nextflow.test.config"
+    config "./nextflow.config"
     script "../main.nf"
     process "AMPS"
    
@@ -15,7 +15,7 @@ nextflow_process {
    
     setup {
         run("UNZIP", alias: "UNZIP_MALT") {
-            script "../../../../modules/nf-core/unzip/main.nf"
+            script "../../../modules/nf-core/unzip/main.nf"
             
             process {
                 """
@@ -25,7 +25,7 @@ nextflow_process {
         }
         
         run("UNZIP", alias: "UNZIP_MALTEXTRACT") {
-            script "../../../../modules/nf-core/unzip/main.nf"
+            script "../../../modules/nf-core/unzip/main.nf"
             
             process {
                 """
@@ -35,7 +35,7 @@ nextflow_process {
         }
         
         run("MALT_BUILD") {
-            script "../../../../modules/nf-core/malt/build/main.nf"
+            script "../../../modules/nf-core/malt/build/main.nf"
             params {
                 module_args = "--sequenceType DNA"
             }
@@ -50,7 +50,7 @@ nextflow_process {
         }
         
         run("MALT_RUN") {
-            script "../../../../modules/nf-core/malt/run/main.nf"
+            script "../../../modules/nf-core/malt/run/main.nf"
             params {
                 module_args = "-m BlastN -J-Xmx8G"
             }
@@ -67,7 +67,7 @@ nextflow_process {
         }
         
         run("MALTEXTRACT") {
-            script "../../../../modules/nf-core/maltextract/main.nf"
+            script "../../../modules/nf-core/maltextract/main.nf"
             params {
                 module_args = '-f def_anc'
             }
