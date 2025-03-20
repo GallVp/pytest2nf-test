@@ -10,10 +10,12 @@ import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTreeWalker
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.yaml.snakeyaml.DumperOptions
 import java.io.File
 import java.io.IOException
 import java.nio.file.Paths
 import kotlin.system.exitProcess
+import org.yaml.snakeyaml.Yaml
 
 object TestConverter {
     @kotlin.jvm.JvmStatic
@@ -21,28 +23,69 @@ object TestConverter {
         var componentMainPath: String? = null
         var testPath: String? = null
         var outputPath: String? = null
+        var nfCoreModuleName: String? = null
 
         // Process args
         for (i in args.indices) {
             when (args[i]) {
+                "--nf-core-module" -> if (i + 1 < args.size) nfCoreModuleName = args[i + 1]
                 "--main" -> if (i + 1 < args.size) componentMainPath = args[i + 1]
                 "--test" -> if (i + 1 < args.size) testPath = args[i + 1]
                 "--output" -> if (i + 1 < args.size) outputPath = args[i + 1]
             }
         }
 
+        if ((componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) && nfCoreModuleName.isNullOrBlank()) {
+            System.err.println(
+                """
+                Usage:
+                pytest2nf-test --nf-core-module tool/subtool
+                e.g. pytest2nf-test --nf-core-module canu
+                e.g. pytest2nf-test --nf-core-module elprep/merge
+                Or,
+                pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
+            """.trimIndent()
+            )
+            exitProcess(1)
+        }
+
+        if (!nfCoreModuleName.isNullOrBlank() && (!componentMainPath.isNullOrBlank() || !testPath.isNullOrBlank() || !outputPath.isNullOrBlank())) {
+            System.err.println(
+                """
+                Usage:
+                pytest2nf-test --nf-core-module tool/subtool
+                e.g. pytest2nf-test --nf-core-module canu
+                e.g. pytest2nf-test --nf-core-module elprep/merge
+                Or,
+                pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
+            """.trimIndent()
+            )
+            exitProcess(1)
+        }
+
+        if (!nfCoreModuleName.isNullOrBlank()) {
+            componentMainPath = "modules/nf-core/${nfCoreModuleName}/main.nf"
+            testPath = "tests/modules/nf-core/${nfCoreModuleName}/main.nf"
+            outputPath = "modules/nf-core/${nfCoreModuleName}/tests/main.nf.test"
+        }
+
         if (componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) {
             System.err.println(
                 """
-                Usage: TestConverter --main <main.nf> --test <test.nf> --output <main.nf.test>
+                Usage:
+                pytest2nf-test --nf-core-module tool/subtool
+                e.g. pytest2nf-test --nf-core-module canu
+                e.g. pytest2nf-test --nf-core-module elprep/merge
+                Or,
+                pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
             """.trimIndent()
             )
             exitProcess(1)
         }
 
         // Read files
-        val pyTestFile = File(testPath)
         val componentMainFile = File(componentMainPath)
+        val pyTestFile = File(testPath)
         val nfTestFile = File(outputPath)
 
         val mainFileRelativeToNFTestFile = componentMainFile.relativeTo(nfTestFile.parentFile)
@@ -125,27 +168,35 @@ object TestConverter {
                 }
         }
 
-        val testTags =
-            listOf(if (componentType == "workflow") "subworkflows" else "modules") + listener.includedComponents.map {
+        val nfCoreTag = if (!nfCoreModuleName.isNullOrBlank() && componentType == "workflow") {
+            "workflow_nfcore"
+        } else if (!nfCoreModuleName.isNullOrBlank()) {
+            "modules_nfcore"
+        } else {
+            null
+        }
 
-                if (componentType == "workflow" && it.name.lowercase() == componentName) {
-                    return@map listOf(componentName)
-                }
+        val testTags = (listOf(if (componentType == "workflow") "subworkflows" else "modules", nfCoreTag) +
+                listener.includedComponents.map {
 
-                val normalised = it.name.lowercase().replace("_", "/")
-                val component = if (normalised.contains("/")) {
-                    normalised.split("/")[0]
-                } else {
-                    normalised
-                }
-                val subComponent = if (normalised.contains("/")) {
-                    normalised
-                } else {
-                    null
-                }
+                    if (componentType == "workflow" && it.name.lowercase() == componentName) {
+                        return@map listOf(componentName)
+                    }
 
-                listOf(component, subComponent)
-            }.flatten().filterNotNull().toSet()
+                    val normalised = it.name.lowercase().replace("_", "/")
+                    val component = if (normalised.contains("/")) {
+                        normalised.split("/")[0]
+                    } else {
+                        normalised
+                    }
+                    val subComponent = if (normalised.contains("/")) {
+                        normalised
+                    } else {
+                        null
+                    }
+
+                    listOf(component, subComponent)
+                }.flatten()).filterNotNull().toSet().toList()
 
         val componentNFTest = ComponentNFTest(
             componentName,
@@ -163,10 +214,24 @@ object TestConverter {
 
         // Populate a nf-test config file
         if (!configAssignments.isNullOrEmpty()) {
-            val configFile = nfTestFile.parentFile.resolve("nextflow.test.config")
+            val configFile = nfTestFile.parentFile.resolve("nextflow.config")
             configFile.writeText(configAssignments.getConfigText(listener.includedComponents))
 
             logger.info("Saved nf-test config file to ${configFile.path}")
+        }
+
+        // Delete the test directory if it is nf-core/module
+        if (!nfCoreModuleName.isNullOrBlank()) {
+            val pyTestDirectory = pyTestFile.parentFile
+
+            logger.info("Deleting $pyTestDirectory")
+
+            pyTestDirectory.deleteRecursively()
+        }
+
+        // Delete the pytest entry from tests yml
+        if (!nfCoreModuleName.isNullOrBlank()) {
+            deleteYamlKey(nfCoreModuleName)
         }
     }
 
@@ -177,6 +242,29 @@ object TestConverter {
             e.printStackTrace()
             null
         }
+    }
+
+    private fun deleteYamlKey(keyToDelete: String) {
+
+        val options = DumperOptions().apply {
+            defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+            indent = 4
+            indicatorIndent = 2
+            defaultScalarStyle = DumperOptions.ScalarStyle.PLAIN
+        }
+
+        val yaml = Yaml(options)
+        val file = File("tests/config/pytest_modules.yml")
+
+        val data: MutableMap<String, Any> = yaml.load(file.readText()) ?: mutableMapOf()
+
+        if (data.remove(keyToDelete) != null) {
+            logger.info("Key '$keyToDelete' removed successfully from pytest_modules.yml")
+        } else {
+            logger.debug("Key '$keyToDelete' not found in pytest_modules.yml")
+        }
+
+        file.writeText(yaml.dump(data))
     }
 
     private val logger: Logger = LoggerFactory.getLogger(TestConverter::class.java)

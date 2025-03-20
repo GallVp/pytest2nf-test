@@ -1,7 +1,7 @@
 nextflow_workflow {
 
     name "Test Workflow VCF_PHASE_SHAPEIT5"
-    config "./nextflow.test.config"
+    config "./nextflow.config"
     script "../main.nf"
     workflow "VCF_PHASE_SHAPEIT5"
    
@@ -44,7 +44,7 @@ nextflow_workflow {
         
         setup {
             run("BCFTOOLS_VIEW") {
-                script "../../../../modules/nf-core/bcftools/view/main.nf"
+                script "../../../modules/nf-core/bcftools/view/main.nf"
                 params {
                     module_args = [
                     "-Oz",
@@ -69,7 +69,7 @@ nextflow_workflow {
             }
             
             run("BCFTOOLS_INDEX") {
-                script "../../../../modules/nf-core/bcftools/index/main.nf"
+                script "../../../modules/nf-core/bcftools/index/main.nf"
                 
                 process {
                     """

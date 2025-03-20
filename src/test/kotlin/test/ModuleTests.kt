@@ -13,7 +13,7 @@ class ModuleTests {
     @Test
     fun testCADD() {
         val mainPath: Path = Paths.get("test/cadd/main.nf")
-        val pyTestMainPath: Path = Paths.get("test/cadd/tests/main.nf")
+        val pyTestMainPath: Path = Paths.get("test/cadd/tests/pytest/main.nf")
         val nfTestMainPath: Path = Paths.get("test/cadd/tests/main.nf.test")
 
         val outputPath: Path = Paths.get("test/cadd/tests/main.nf.test")
@@ -31,13 +31,13 @@ class ModuleTests {
     @Test
     fun testAMPS() {
         val mainPath: Path = Paths.get("test/amps/main.nf")
-        val pyTestMainPath: Path = Paths.get("test/amps/tests/main.nf")
+        val pyTestMainPath: Path = Paths.get("test/amps/tests/pytest/main.nf")
         val nfTestMainPath: Path = Paths.get("test/amps/tests/main.nf.test")
 
         val outputPath: Path = Paths.get("test/amps/tests/main.nf.test")
-        val outputConfigPath = Paths.get("test/amps/tests/nextflow.test.config")
+        val outputConfigPath = Paths.get("test/amps/tests/nextflow.config")
 
-        val expectedMD5 = "dcf3030a00e60309e1ff2c67fb3da184"
+        val expectedMD5 = "0bad6a8905e245d6cb34622506f5b09c"
         val expectedConfigMD5 = "51ffd764fcb8d79f68be4b1afd4b6437"
 
         val args = arrayOf("--main", "$mainPath", "--test", "$pyTestMainPath", "--output", "$nfTestMainPath")

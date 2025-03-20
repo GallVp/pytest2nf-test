@@ -12,13 +12,13 @@ class WorkflowTests {
     @Test
     fun testVCFPhaseShapeIt5() {
         val mainPath: Path = Paths.get("test/vcf_phase_shapeit5/main.nf")
-        val pyTestMainPath: Path = Paths.get("test/vcf_phase_shapeit5/tests/main.nf")
+        val pyTestMainPath: Path = Paths.get("test/vcf_phase_shapeit5/tests/pytest/main.nf")
         val nfTestMainPath: Path = Paths.get("test/vcf_phase_shapeit5/tests/main.nf.test")
 
         val outputPath: Path = Paths.get("test/vcf_phase_shapeit5/tests/main.nf.test")
-        val outputConfigPath = Paths.get("test/vcf_phase_shapeit5/tests/nextflow.test.config")
+        val outputConfigPath = Paths.get("test/vcf_phase_shapeit5/tests/nextflow.config")
 
-        val expectedMD5 = "f7ee151cf7fe788b12c12285b15eec2c"
+        val expectedMD5 = "3c85c73a7f9565343d0c2f9d1a83c0d9"
         val expectedConfigMD5 = "f5301dfad1d48e33f531ff116a26f461"
 
         val args = arrayOf("--main", "$mainPath", "--test", "$pyTestMainPath", "--output", "$nfTestMainPath")
