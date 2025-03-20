@@ -15,7 +15,6 @@ Converts a Nextflow component pytest to nf-test. The Antlr grammar and associate
 ```
 The built executable is placed at `./build/install/pytest2nf-test/bin/pytest2nf-test` directory. It can also be moved to a directory which on PATH. It is preferable to move the executable to a directory which is on PATH or add the `./build/install/pytest2nf-test/bin` directory to PATH.
 
-After building you can either add the `./build/install/pytest2nf-test/bin/` to your `PATH` or use the full path to the executable.
 Another alternative is to create an alias in your shell configuration file.
 
 ```bash
