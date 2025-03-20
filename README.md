@@ -14,13 +14,33 @@ Converts a Nextflow component pytest to nf-test. The Antlr grammar and associate
 ./gradlew installDist
 ```
 
+After building you can either add the `./build/install/pytest2nf-test/bin/` to your `PATH` or use the full path to the executable.
+Another alternative is to create an alias in your shell configuration file.
+
+```bash
+alias pytest2nf-test=${PWD}/build/install/pytest2nf-test/bin/pytest2nf-test
+```
+
 ## Test
 
 ```bash
-./build/install/pytest2nf-test/bin/pytest2nf-test \
+pytest2nf-test \
     --main test/cadd/main.nf \
     --test test/cadd/tests/main.nf \
-    --output test/cadd/tests/main.nf.test
+    --output test/cadd/tests/main.nf.test \
+    --data-dict test/test_data.config
+
+pytest2nf-test \
+    --main test/amps/main.nf \
+    --test test/amps/tests/main.nf \
+    --output test/amps/tests/main.nf.test \
+    --data-dict test/test_data.config
+
+pytest2nf-test \
+    --main test/vcf_phase_shapeit5/main.nf \
+    --test test/vcf_phase_shapeit5/tests/main.nf \
+    --output test/vcf_phase_shapeit5/tests/main.nf.test \
+    --data-dict test/test_data.config
 ```
 
 ## Nextflow Antlr Grammar

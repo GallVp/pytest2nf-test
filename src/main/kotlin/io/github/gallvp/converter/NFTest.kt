@@ -51,6 +51,7 @@ data class NFTest(
             componentType: String,
             nfTestFile: File,
             configAssignments: List<ConfigAssignment>?,
+            dataDictMap: Map<String, Any>,
             shareSetup: Boolean,
             addStubOption: Boolean
         ): NFTest {
@@ -68,7 +69,7 @@ data class NFTest(
                 targetComponentExpression.arguments
             )
 
-            val inputs = pyTestArgumentsToNFTestInputs(pyTest, targetComponentExpression.arguments)
+            val inputs = pyTestArgumentsToNFTestInputs(pyTest, targetComponentExpression.arguments, dataDictMap)
 
             val inputsBlock = """
                 |$componentType {
@@ -140,7 +141,7 @@ data class NFTest(
                     val invokedComponentRelativePath =
                         File(invokedComponentPath).relativeTo(nfTestFile.parentFile.absoluteFile).path
 
-                    val formattedInputs = pyTestArgumentsToNFTestInputs(pyTest, componentArguments).split("\n")
+                    val formattedInputs = pyTestArgumentsToNFTestInputs(pyTest, componentArguments, dataDictMap).split("\n")
                         .joinToString("\n") { "        $it" }
 
                     val setupProcessConfigAssignment = configAssignments?.firstOrNull() {
@@ -193,8 +194,9 @@ data class NFTest(
             return NFTest(pyTest.name, whenBlock, thenBlock, setupBlock, shareSetup, addStubOption)
         }
 
-        private fun pyTestArgumentsToNFTestInputs(pyTest: PyTest, arguments: List<String>): String =
-            arguments.map { arg ->
+        private fun pyTestArgumentsToNFTestInputs(pyTest: PyTest, arguments: List<String>, dataDictMap: Map<String, Any>?): String {
+            return arguments.mapNotNull {
+                arg -> // Use mapNotNull to filter out failed values
                 val argValue = if (pyTest.variableHasAssignedValue(arg)) {
                     val assignedValue = pyTest.variableAssignedValue(arg)
                     logger.debug("Picked assigned value for $arg: $assignedValue")
@@ -202,7 +204,15 @@ data class NFTest(
                 } else {
                     arg
                 }
-                argValue ?: "FAILED TO GET VALUE FOR $arg"
+
+                if (argValue == null) return@mapNotNull "FAILED TO GET VALUE FOR $arg"
+                val resolvedValue = if (dataDictMap != null) {
+                    resolveTestDataReferences(argValue, dataDictMap) // Resolve params.test_data[]
+                } else {
+                    argValue
+                }
+
+                resolvedValue
             }.mapIndexed { i, argValue ->
                 if (argValue.contains("\n")) {
                     """
@@ -212,6 +222,34 @@ data class NFTest(
                     "input[${i}] = $argValue"
                 }
             }.joinToString("\n")
+        }
+        
+        private fun resolveTestDataReferences(argValue: String, dataDictMap: Map<String, Any>): String {
+            // If dataDictMap is empty, return the original value
+            if (dataDictMap.isEmpty()) return argValue
+            val regex = Regex("""params\.test_data((\['[^']+'\]+)*)""")
+
+            return regex.replace(argValue) { match ->
+                val matchedValue = match.value // This is the matched part (e.g., "params.test_data['homo_sapiens']['illumina']['test_genome_vcf']")
+
+                // Extracting the keys from the matched value
+                val keys = matchedValue
+                    .removePrefix("params.test_data") // Remove the "params.test_data" prefix
+                    .trim('[', ']') // Remove the surrounding brackets
+                    .split("']['") // Split by "']['"
+                    .map { it.trim('\'') } // Remove the surrounding single quotes for each key
+
+                // Resolving the value using the keys
+                var value: Any? = dataDictMap
+                for (key in keys) {
+                    // Try to find the value at each level
+                    value = (value as? Map<*, *>)?.get(key) ?: return@replace "UNKNOWN_VALUE"
+                }
+                
+                // If we found a value, return it, else return UNKNOWN_VALUE
+                value?.toString() ?: "UNKNOWN_VALUE"
+            }
+        }
 
         private val logger: Logger = LoggerFactory.getLogger(NFTest::class.java)
     }
