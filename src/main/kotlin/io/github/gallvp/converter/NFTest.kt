@@ -243,11 +243,14 @@ data class NFTest(
                 var value: Any? = dataDictMap
                 for (key in keys) {
                     // Try to find the value at each level
-                    value = (value as? Map<*, *>)?.get(key) ?: return@replace "UNKNOWN_VALUE"
+                    value = (value as? Map<*, *>)?.get(key) ?: null
                 }
                 
                 // If we found a value, return it, else return UNKNOWN_VALUE
-                value?.toString() ?: "UNKNOWN_VALUE"
+                if (value?.toString() == null) {
+                    logger.warn("$argValue not found in data dictionary provided")
+                }
+                value?.toString() ?: argValue
             }
         }
 
