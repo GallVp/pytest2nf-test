@@ -49,8 +49,8 @@ pytest2nf-test \
 
 From the nf-core/modules directory,
 
-```
-/path/to/build/install/pytest2nf-test/bin/pytest2nf-test \
+```bash
+pytest2nf-test \
     --nf-core-module canu
 ```
 
