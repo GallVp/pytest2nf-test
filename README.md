@@ -28,19 +28,19 @@ alias pytest2nf-test=${PWD}/build/install/pytest2nf-test/bin/pytest2nf-test
 ```bash
 pytest2nf-test \
     --main test/cadd/main.nf \
-    --test test/cadd/tests/main.nf \
+    --test test/cadd/tests/pytest/main.nf \
     --output test/cadd/tests/main.nf.test \
     --data-dict test/test_data.config
 
 pytest2nf-test \
     --main test/amps/main.nf \
-    --test test/amps/tests/main.nf \
+    --test test/amps/tests/pytest/main.nf \
     --output test/amps/tests/main.nf.test \
     --data-dict test/test_data.config
 
 pytest2nf-test \
     --main test/vcf_phase_shapeit5/main.nf \
-    --test test/vcf_phase_shapeit5/tests/main.nf \
+    --test test/vcf_phase_shapeit5/tests/pytest/main.nf \
     --output test/vcf_phase_shapeit5/tests/main.nf.test \
     --data-dict test/test_data.config
 ```
