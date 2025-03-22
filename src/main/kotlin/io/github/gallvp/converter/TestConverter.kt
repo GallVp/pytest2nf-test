@@ -21,6 +21,17 @@ import org.yaml.snakeyaml.Yaml
 object TestConverter {
     @kotlin.jvm.JvmStatic
     fun main(args: Array<String>) {
+
+        val usage = """
+                Usage:
+                pytest2nf-test --nf-core-module tool/subtool
+                e.g. pytest2nf-test --nf-core-module canu
+                e.g. pytest2nf-test --nf-core-module elprep/merge
+                Or,
+                pytest2nf-test --main <main.nf> --test <test.nf> --data-dict <data-dict.config> --output <main.nf.test>
+                --data-dict is optional
+            """.trimIndent()
+
         var componentMainPath: String? = null
         var testPath: String? = null
         var outputPath: String? = null
@@ -40,28 +51,14 @@ object TestConverter {
 
         if ((componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) && nfCoreModuleName.isNullOrBlank()) {
             System.err.println(
-                """
-                Usage:
-                pytest2nf-test --nf-core-module tool/subtool
-                e.g. pytest2nf-test --nf-core-module canu
-                e.g. pytest2nf-test --nf-core-module elprep/merge
-                Or,
-                pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
-            """.trimIndent()
+                usage
             )
             exitProcess(1)
         }
 
         if (!nfCoreModuleName.isNullOrBlank() && (!componentMainPath.isNullOrBlank() || !testPath.isNullOrBlank() || !outputPath.isNullOrBlank())) {
             System.err.println(
-                """
-                Usage:
-                pytest2nf-test --nf-core-module tool/subtool
-                e.g. pytest2nf-test --nf-core-module canu
-                e.g. pytest2nf-test --nf-core-module elprep/merge
-                Or,
-                pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
-            """.trimIndent()
+                usage
             )
             exitProcess(1)
         }
@@ -75,14 +72,7 @@ object TestConverter {
 
         if (componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) {
             System.err.println(
-                """
-                Usage:
-                pytest2nf-test --nf-core-module tool/subtool
-                e.g. pytest2nf-test --nf-core-module canu
-                e.g. pytest2nf-test --nf-core-module elprep/merge
-                Or,
-                pytest2nf-test --main <main.nf> --test <test.nf> --data-dict <data-dict.config> --output <main.nf.test>
-            """.trimIndent()
+                usage
             )
             exitProcess(1)
         }
@@ -91,7 +81,7 @@ object TestConverter {
         val componentMainFile = File(componentMainPath)
         val pyTestFile = File(testPath)
         val nfTestFile = File(outputPath)
-        val dataDictFile = if (dataDictPath != null) File(dataDictPath) else null
+        val dataDictFile = dataDictPath?.let { File(it) }
 
         val mainFileRelativeToNFTestFile = componentMainFile.relativeTo(nfTestFile.parentFile)
 
@@ -143,11 +133,9 @@ object TestConverter {
 
         // Parse data-dict file
         val dataDictMap: MutableMap<String, Any> = mutableMapOf()
-        if (dataDictFile != null) {
-            val dataDictCharStream = getCharStreamFromFile(dataDictFile.path)
-            dataDictMap.putAll(extractTestData(dataDictCharStream.toString()))
-        }
-        
+        val dataDictCharStream = dataDictFile?.let { getCharStreamFromFile(it.path) }
+        dataDictMap.putAll(extractTestData(dataDictCharStream?.toString()))
+
         // Populate a nf-test file
         val nfTests = listener.tests.toList()
             .map {
@@ -258,7 +246,13 @@ object TestConverter {
         }
     }
 
-    private fun extractTestData(configContent: String): Map<String, Any> {
+    private fun extractTestData(configContent: String?): Map<String, Any> {
+
+        if (configContent == null) {
+            logger.error("Could not read the --data-dict config content")
+            return emptyMap()
+        }
+
         val startIndex = configContent.indexOf("test_data {")
         if (startIndex == -1) {
             logger.error("Failed to find 'test_data' block in the config content")
@@ -283,7 +277,8 @@ object TestConverter {
             return emptyMap()
         }
 
-        val testDataContent = configContent.substring(startIndex + 10, endIndex).trim() // Extract content inside `test_data { ... }`
+        val testDataContent =
+            configContent.substring(startIndex + 10, endIndex).trim()
         val resolvedTestDataContent = resolveTestDataReferences(testDataContent)
         val testDataMap = parseTestData(resolvedTestDataContent)
         return testDataMap
@@ -291,22 +286,18 @@ object TestConverter {
 
     private fun parseTestData(data: String): Map<String, Any> {
         val result = mutableMapOf<String, Any>()
-        
-        // Regular expression to match the 'key' structure (e.g., 'sarscov2 {')
+
         val keyPattern = Pattern.compile("'?([^']+)'? \\{")
-        // Regular expression to match the assignment of keys to values (e.g., key = "value")
         val assignmentPattern = Pattern.compile("([^\\s=]+)\\s*=\\s*\"([^\"]+)\"")
 
         val stack = mutableListOf<MutableMap<String, Any>>()
         var currentMap = result // Start with the root result map
 
-        // Split the input into lines and process each line
         val lines = data.lines()
 
         for (line in lines) {
             val trimmedLine = line.trim()
 
-            // Match the start of a new block (e.g., 'sarscov2 {')
             val keyMatcher = keyPattern.matcher(trimmedLine)
             if (keyMatcher.matches()) {
                 val newKey = keyMatcher.group(1)
@@ -317,7 +308,6 @@ object TestConverter {
                 continue
             }
 
-            // Match the assignment of key-value pairs (e.g., key = "value")
             val assignmentMatcher = assignmentPattern.matcher(trimmedLine)
             if (assignmentMatcher.matches()) {
                 val subKey = assignmentMatcher.group(1)
@@ -326,7 +316,6 @@ object TestConverter {
                 continue
             }
 
-            // Handle the closing of a block (e.g., '}')
             if (trimmedLine == "}") {
                 if (stack.isNotEmpty()) {
                     currentMap = stack.removeAt(stack.size - 1)
@@ -340,8 +329,6 @@ object TestConverter {
     private fun resolveTestDataReferences(value: String): String {
         val regex = Regex("""\$\{params\.test_data_base\}\/data\/(.*)""")
         return regex.replace(value) { match ->
-            // Replace the placeholder with the proper string format
-            // The correct result should be: params.modules_testdata_base_path + '/<path>'
             val pathAfterData = match.groupValues[1]
             val cleanedPath = pathAfterData.trimEnd('"')
             "params.modules_testdata_base_path + \'$cleanedPath\'\""

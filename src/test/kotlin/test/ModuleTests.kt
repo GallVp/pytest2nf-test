@@ -15,12 +15,22 @@ class ModuleTests {
         val mainPath: Path = Paths.get("test/cadd/main.nf")
         val pyTestMainPath: Path = Paths.get("test/cadd/tests/pytest/main.nf")
         val nfTestMainPath: Path = Paths.get("test/cadd/tests/main.nf.test")
+        val testDataConfigPath: Path = Paths.get("test/test_data.config")
 
         val outputPath: Path = Paths.get("test/cadd/tests/main.nf.test")
 
         val expectedMD5 = "72bddc400b47b674fa80cc35c5ef6fb1"
 
-        val args = arrayOf("--main", "$mainPath", "--test", "$pyTestMainPath", "--output", "$nfTestMainPath")
+        val args = arrayOf(
+            "--main",
+            "$mainPath",
+            "--test",
+            "$pyTestMainPath",
+            "--output",
+            "$nfTestMainPath",
+            "--data-dict",
+            "$testDataConfigPath"
+        )
         TestConverter.main(args)
 
         val actualMD5 = computeMD5Checksum(outputPath)
@@ -33,21 +43,34 @@ class ModuleTests {
         val mainPath: Path = Paths.get("test/amps/main.nf")
         val pyTestMainPath: Path = Paths.get("test/amps/tests/pytest/main.nf")
         val nfTestMainPath: Path = Paths.get("test/amps/tests/main.nf.test")
+        val testDataConfigPath: Path = Paths.get("test/test_data.config")
 
         val outputPath: Path = Paths.get("test/amps/tests/main.nf.test")
         val outputConfigPath = Paths.get("test/amps/tests/nextflow.config")
 
-        val expectedMD5 = "0bad6a8905e245d6cb34622506f5b09c"
+        val expectedMD5 = "394db85c189c69a01d00c628a765cdae"
         val expectedConfigMD5 = "51ffd764fcb8d79f68be4b1afd4b6437"
 
-        val args = arrayOf("--main", "$mainPath", "--test", "$pyTestMainPath", "--output", "$nfTestMainPath")
+        val args = arrayOf(
+            "--main",
+            "$mainPath",
+            "--test",
+            "$pyTestMainPath",
+            "--output",
+            "$nfTestMainPath",
+            "--data-dict",
+            "$testDataConfigPath"
+        )
         TestConverter.main(args)
 
         val actualMD5 = computeMD5Checksum(outputPath)
         val actualConfigMD5 = computeMD5Checksum(outputConfigPath)
 
         assertEquals(expectedMD5, actualMD5) { "Failed to convert 'AMPS': $actualMD5 != $expectedMD5" }
-        assertEquals(expectedConfigMD5, actualConfigMD5) { "Failed to convert 'AMPS' config: $actualConfigMD5 != $expectedConfigMD5" }
+        assertEquals(
+            expectedConfigMD5,
+            actualConfigMD5
+        ) { "Failed to convert 'AMPS' config: $actualConfigMD5 != $expectedConfigMD5" }
     }
 
     private fun computeMD5Checksum(path: Path): String = Files.readAllBytes(path)
