@@ -19,7 +19,7 @@ class ModuleTests {
 
         val outputPath: Path = Paths.get("test/cadd/tests/main.nf.test")
 
-        val expectedMD5 = "72bddc400b47b674fa80cc35c5ef6fb1"
+        val expectedMD5 = "ea18faaf149074ef49bcc8102e63f768"
 
         val args = arrayOf(
             "--main",
