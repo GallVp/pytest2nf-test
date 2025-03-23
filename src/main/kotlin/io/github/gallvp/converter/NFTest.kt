@@ -51,6 +51,7 @@ data class NFTest(
             componentType: String,
             nfTestFile: File,
             configAssignments: List<ConfigAssignment>?,
+            dataDictMap: Map<String, Any>,
             shareSetup: Boolean,
             addStubOption: Boolean
         ): NFTest {
@@ -68,7 +69,7 @@ data class NFTest(
                 targetComponentExpression.arguments
             )
 
-            val inputs = pyTestArgumentsToNFTestInputs(pyTest, targetComponentExpression.arguments)
+            val inputs = pyTestArgumentsToNFTestInputs(pyTest, targetComponentExpression.arguments, dataDictMap)
 
             val inputsBlock = """
                 |$componentType {
@@ -140,7 +141,7 @@ data class NFTest(
                     val invokedComponentRelativePath =
                         File(invokedComponentPath).relativeTo(nfTestFile.parentFile.absoluteFile).path
 
-                    val formattedInputs = pyTestArgumentsToNFTestInputs(pyTest, componentArguments).split("\n")
+                    val formattedInputs = pyTestArgumentsToNFTestInputs(pyTest, componentArguments, dataDictMap).split("\n")
                         .joinToString("\n") { "        $it" }
 
                     val setupProcessConfigAssignment = configAssignments?.firstOrNull() {
@@ -193,8 +194,8 @@ data class NFTest(
             return NFTest(pyTest.name, whenBlock, thenBlock, setupBlock, shareSetup, addStubOption)
         }
 
-        private fun pyTestArgumentsToNFTestInputs(pyTest: PyTest, arguments: List<String>): String =
-            arguments.map { arg ->
+        private fun pyTestArgumentsToNFTestInputs(pyTest: PyTest, arguments: List<String>, dataDictMap: Map<String, Any>?): String {
+            return arguments.map { arg ->
                 val argValue = if (pyTest.variableHasAssignedValue(arg)) {
                     val assignedValue = pyTest.variableAssignedValue(arg)
                     logger.debug("Picked assigned value for $arg: $assignedValue")
@@ -202,7 +203,17 @@ data class NFTest(
                 } else {
                     arg
                 }
-                argValue ?: "FAILED TO GET VALUE FOR $arg"
+
+                if (argValue == null) return@map "FAILED TO GET VALUE FOR $arg"
+                val resolvedValue = if (dataDictMap != null) {
+                    resolveTestDataReferences(argValue, dataDictMap)
+                } else {
+                    argValue
+                }
+
+                logger.debug("Value resolved for $arg: $resolvedValue")
+
+                resolvedValue
             }.mapIndexed { i, argValue ->
                 if (argValue.contains("\n")) {
                     """
@@ -212,6 +223,40 @@ data class NFTest(
                     "input[${i}] = $argValue"
                 }
             }.joinToString("\n")
+        }
+        
+        private fun resolveTestDataReferences(argValue: String, dataDictMap: Map<String, Any>): String {
+            // If dataDictMap is empty, return the original value
+            if (dataDictMap.isEmpty()) return argValue
+            val regex = Regex("""params\.test_data((\['[^']+'\]+)*)""")
+
+            return regex.replace(argValue) { match ->
+
+                val matchedValue = match.value
+                // This is the matched part (e.g., "params.test_data['homo_sapiens']['illumina']['test_genome_vcf']")
+
+                logger.debug("Found match in $argValue: $matchedValue")
+
+                val keys = matchedValue
+                    .removePrefix("params.test_data")
+                    .trim('[', ']')
+                    .split("']['")
+                    .map { it.trim('\'') }
+
+                logger.debug("Looking for keys in data map: {}", keys)
+
+                var value: Any? = dataDictMap
+                for (key in keys) {
+                    value = (value as? Map<*, *>)?.get(key)
+                }
+
+                if (value == null) {
+                    logger.warn("$matchedValue not found in data dictionary provided")
+                }
+
+                value?.toString() ?: matchedValue
+            }
+        }
 
         private val logger: Logger = LoggerFactory.getLogger(NFTest::class.java)
     }

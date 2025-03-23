@@ -14,15 +14,28 @@ import org.yaml.snakeyaml.DumperOptions
 import java.io.File
 import java.io.IOException
 import java.nio.file.Paths
+import java.util.regex.Pattern
 import kotlin.system.exitProcess
 import org.yaml.snakeyaml.Yaml
 
 object TestConverter {
     @kotlin.jvm.JvmStatic
     fun main(args: Array<String>) {
+
+        val usage = """
+                Usage:
+                pytest2nf-test --nf-core-module tool/subtool
+                e.g. pytest2nf-test --nf-core-module canu
+                e.g. pytest2nf-test --nf-core-module elprep/merge
+                Or,
+                pytest2nf-test --main <main.nf> --test <test.nf> --data-dict <data-dict.config> --output <main.nf.test>
+                --data-dict is optional
+            """.trimIndent()
+
         var componentMainPath: String? = null
         var testPath: String? = null
         var outputPath: String? = null
+        var dataDictPath: String? = null
         var nfCoreModuleName: String? = null
 
         // Process args
@@ -32,33 +45,20 @@ object TestConverter {
                 "--main" -> if (i + 1 < args.size) componentMainPath = args[i + 1]
                 "--test" -> if (i + 1 < args.size) testPath = args[i + 1]
                 "--output" -> if (i + 1 < args.size) outputPath = args[i + 1]
+                "--data-dict" -> if (i + 1 < args.size) dataDictPath = args[i + 1]
             }
         }
 
         if ((componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) && nfCoreModuleName.isNullOrBlank()) {
             System.err.println(
-                """
-                Usage:
-                pytest2nf-test --nf-core-module tool/subtool
-                e.g. pytest2nf-test --nf-core-module canu
-                e.g. pytest2nf-test --nf-core-module elprep/merge
-                Or,
-                pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
-            """.trimIndent()
+                usage
             )
             exitProcess(1)
         }
 
         if (!nfCoreModuleName.isNullOrBlank() && (!componentMainPath.isNullOrBlank() || !testPath.isNullOrBlank() || !outputPath.isNullOrBlank())) {
             System.err.println(
-                """
-                Usage:
-                pytest2nf-test --nf-core-module tool/subtool
-                e.g. pytest2nf-test --nf-core-module canu
-                e.g. pytest2nf-test --nf-core-module elprep/merge
-                Or,
-                pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
-            """.trimIndent()
+                usage
             )
             exitProcess(1)
         }
@@ -67,18 +67,12 @@ object TestConverter {
             componentMainPath = "modules/nf-core/${nfCoreModuleName}/main.nf"
             testPath = "tests/modules/nf-core/${nfCoreModuleName}/main.nf"
             outputPath = "modules/nf-core/${nfCoreModuleName}/tests/main.nf.test"
+            dataDictPath = "tests/config/test_data.config"
         }
 
         if (componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) {
             System.err.println(
-                """
-                Usage:
-                pytest2nf-test --nf-core-module tool/subtool
-                e.g. pytest2nf-test --nf-core-module canu
-                e.g. pytest2nf-test --nf-core-module elprep/merge
-                Or,
-                pytest2nf-test --main <main.nf> --test <test.nf> --output <main.nf.test>
-            """.trimIndent()
+                usage
             )
             exitProcess(1)
         }
@@ -87,6 +81,7 @@ object TestConverter {
         val componentMainFile = File(componentMainPath)
         val pyTestFile = File(testPath)
         val nfTestFile = File(outputPath)
+        val dataDictFile = dataDictPath?.let { File(it) }
 
         val mainFileRelativeToNFTestFile = componentMainFile.relativeTo(nfTestFile.parentFile)
 
@@ -136,6 +131,11 @@ object TestConverter {
             configAssignments = configListener.configAssignments
         }
 
+        // Parse data-dict file
+        val dataDictMap: MutableMap<String, Any> = mutableMapOf()
+        val dataDictCharStream = dataDictFile?.let { getCharStreamFromFile(it.path) }
+        dataDictMap.putAll(extractTestData(dataDictCharStream?.toString()))
+
         // Populate a nf-test file
         val nfTests = listener.tests.toList()
             .map {
@@ -146,6 +146,7 @@ object TestConverter {
                     componentType,
                     nfTestFile,
                     configAssignments,
+                    dataDictMap,
                     componentHasStub,
                     false
                 )
@@ -162,6 +163,7 @@ object TestConverter {
                         componentType,
                         nfTestFile,
                         configAssignments,
+                        dataDictMap,
                         true,
                         true
                     )
@@ -241,6 +243,95 @@ object TestConverter {
         } catch (e: IOException) {
             e.printStackTrace()
             null
+        }
+    }
+
+    private fun extractTestData(configContent: String?): Map<String, Any> {
+
+        if (configContent == null) {
+            logger.error("Could not read the --data-dict config content")
+            return emptyMap()
+        }
+
+        val startIndex = configContent.indexOf("test_data {")
+        if (startIndex == -1) {
+            logger.error("Failed to find 'test_data' block in the config content")
+            return emptyMap()
+        }
+
+        var bracketCount = 1
+        var endIndex = startIndex
+        for (i in startIndex until configContent.length) {
+            when (configContent[i]) {
+                '{' -> bracketCount++
+                '}' -> bracketCount--
+            }
+            if (bracketCount == 0) {
+                endIndex = i
+                break
+            }
+        }
+
+        if (bracketCount != 0) {
+            logger.error("Unmatched brackets in 'test_data' block")
+            return emptyMap()
+        }
+
+        val testDataContent =
+            configContent.substring(startIndex + 10, endIndex).trim()
+        val resolvedTestDataContent = resolveTestDataReferences(testDataContent)
+        val testDataMap = parseTestData(resolvedTestDataContent)
+        return testDataMap
+    }
+
+    private fun parseTestData(data: String): Map<String, Any> {
+        val result = mutableMapOf<String, Any>()
+
+        val keyPattern = Pattern.compile("'?([^']+)'? \\{")
+        val assignmentPattern = Pattern.compile("([^\\s=]+)\\s*=\\s*\"([^\"]+)\"")
+
+        val stack = mutableListOf<MutableMap<String, Any>>()
+        var currentMap = result // Start with the root result map
+
+        val lines = data.lines()
+
+        for (line in lines) {
+            val trimmedLine = line.trim()
+
+            val keyMatcher = keyPattern.matcher(trimmedLine)
+            if (keyMatcher.matches()) {
+                val newKey = keyMatcher.group(1)
+                val newMap = mutableMapOf<String, Any>()
+                currentMap[newKey] = newMap
+                stack.add(currentMap)
+                currentMap = newMap
+                continue
+            }
+
+            val assignmentMatcher = assignmentPattern.matcher(trimmedLine)
+            if (assignmentMatcher.matches()) {
+                val subKey = assignmentMatcher.group(1)
+                val subValue = assignmentMatcher.group(2)
+                currentMap[subKey] = subValue
+                continue
+            }
+
+            if (trimmedLine == "}") {
+                if (stack.isNotEmpty()) {
+                    currentMap = stack.removeAt(stack.size - 1)
+                }
+            }
+        }
+
+        return result
+    }
+
+    private fun resolveTestDataReferences(value: String): String {
+        val regex = Regex("""\$\{params\.test_data_base\}\/data\/(.*)""")
+        return regex.replace(value) { match ->
+            val pathAfterData = match.groupValues[1]
+            val cleanedPath = pathAfterData.trimEnd('"')
+            "params.modules_testdata_base_path + \'$cleanedPath\'\""
         }
     }
 
