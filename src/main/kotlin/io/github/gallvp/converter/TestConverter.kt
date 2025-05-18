@@ -57,7 +57,7 @@ object TestConverter {
         val isNfCoreModule = ! nfCoreModuleName.isNullOrBlank()
         val isNfCoreSbwf = ! nfCoreSbwfName.isNullOrBlank()
         val isNfCoreComponent = isNfCoreModule || isNfCoreSbwf
-        val isCustomComponent = ! componentMainPath.isNullOrBlank() || ! testPath.isNullOrBlank() || ! outputPath.isNullOrBlank() )
+        val isCustomComponent = ! componentMainPath.isNullOrBlank() || ! testPath.isNullOrBlank() || ! outputPath.isNullOrBlank()
 
         if ( isNfCoreComponent && isCustomComponent ) { // Can't be a nf-core and a custom component
             System.err.println(
