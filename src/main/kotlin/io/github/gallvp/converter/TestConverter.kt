@@ -73,7 +73,7 @@ object TestConverter {
             exitProcess(1)
         }
 
-        if ( ! isNfCoreComponent && ! isCustomComponent ) { // Can't be neither
+        if ( ! isNfCoreComponent && ! isCustomComponent ) { // Can't be none
             System.err.println(
                 usage
             )
@@ -95,9 +95,9 @@ object TestConverter {
         }
 
         // Read files
-        val componentMainFile = File(componentMainPath)
-        val pyTestFile = File(testPath)
-        val nfTestFile = File(outputPath)
+        val componentMainFile = File(componentMainPath!!)
+        val pyTestFile = File(testPath!!)
+        val nfTestFile = File(outputPath!!)
         val dataDictFile = dataDictPath?.let { File(it) }
 
         val mainFileRelativeToNFTestFile = componentMainFile.relativeTo(nfTestFile.parentFile)
@@ -256,7 +256,7 @@ object TestConverter {
         }
 
         if (!nfCoreSbwfName.isNullOrBlank()) {
-            deleteYamlKey("subworkflows/" + nfCoreSbwfName)
+            deleteYamlKey("subworkflows/$nfCoreSbwfName")
         }
     }
 
