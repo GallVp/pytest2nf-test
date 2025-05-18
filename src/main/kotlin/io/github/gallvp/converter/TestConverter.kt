@@ -54,6 +54,32 @@ object TestConverter {
             }
         }
 
+        val isNfCoreModule = ! nfCoreModuleName.isNullOrBlank()
+        val isNfCoreSbwf = ! nfCoreSbwfName.isNullOrBlank()
+        val isNfCoreComponent = isNfCoreModule || isNfCoreSbwf
+        val isCustomComponent = ! componentMainPath.isNullOrBlank() || ! testPath.isNullOrBlank() || ! outputPath.isNullOrBlank() )
+
+        if ( isNfCoreComponent && isCustomComponent ) { // Can't be a nf-core and a custom component
+            System.err.println(
+                usage
+            )
+            exitProcess(1)
+        }
+        
+        if ( isNfCoreModule && isNfCoreSbwf ) { // Can't be a nf-core module and a sub-workflow
+            System.err.println(
+                usage
+            )
+            exitProcess(1)
+        }
+
+        if ( ! isNfCoreComponent && ! isCustomComponent ) { // Can't be neither
+            System.err.println(
+                usage
+            )
+            exitProcess(1)
+        }
+
         if (!nfCoreModuleName.isNullOrBlank()) {
             componentMainPath = "modules/nf-core/${nfCoreModuleName}/main.nf"
             testPath = "tests/modules/nf-core/${nfCoreModuleName}/main.nf"
@@ -66,13 +92,6 @@ object TestConverter {
             testPath = "tests/subworkflows/nf-core/${nfCoreSbwfName}/main.nf"
             outputPath = "subworkflows/nf-core/${nfCoreSbwfName}/tests/main.nf.test"
             dataDictPath = "tests/config/test_data.config"
-        }
-
-        if (componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) {
-            System.err.println(
-                usage
-            )
-            exitProcess(1)
         }
 
         // Read files

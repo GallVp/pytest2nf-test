@@ -45,13 +45,16 @@ pytest2nf-test \
     --data-dict test/test_data.config
 ```
 
-### nf-core module
+### nf-core module or sub-workflow
 
 From the nf-core/modules directory,
 
 ```bash
 pytest2nf-test \
     --nf-core-module canu
+
+pytest2nf-test \
+    --nf-core-sbwf vcf_phase_shapeit5
 ```
 
 ## Nextflow Antlr Grammar
