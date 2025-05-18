@@ -54,27 +54,6 @@ object TestConverter {
             }
         }
 
-        if ((componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) && nfCoreModuleName.isNullOrBlank() && nfCoreSbwfName.isNullOrBlank()) {
-            System.err.println(
-                usage
-            )
-            exitProcess(1)
-        }
-
-        if (!nfCoreModuleName.isNullOrBlank() && (!componentMainPath.isNullOrBlank() || !testPath.isNullOrBlank() || !outputPath.isNullOrBlank())) {
-            System.err.println(
-                usage
-            )
-            exitProcess(1)
-        }
-
-        if (!nfCoreSbwfName.isNullOrBlank() && (!componentMainPath.isNullOrBlank() || !testPath.isNullOrBlank() || !outputPath.isNullOrBlank())) {
-            System.err.println(
-                usage
-            )
-            exitProcess(1)
-        }
-
         if (!nfCoreModuleName.isNullOrBlank()) {
             componentMainPath = "modules/nf-core/${nfCoreModuleName}/main.nf"
             testPath = "tests/modules/nf-core/${nfCoreModuleName}/main.nf"
