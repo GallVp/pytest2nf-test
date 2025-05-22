@@ -28,6 +28,9 @@ object TestConverter {
                 e.g. pytest2nf-test --nf-core-module canu
                 e.g. pytest2nf-test --nf-core-module elprep/merge
                 Or,
+                pytest2nf-test --nf-core-sbwf subworkflow_name
+                e.g. pytest2nf-test --nf-core-sbwf vcf_phase_shapeit5
+                Or,
                 pytest2nf-test --main <main.nf> --test <test.nf> --data-dict <data-dict.config> --output <main.nf.test>
                 --data-dict is optional
             """.trimIndent()
@@ -37,11 +40,13 @@ object TestConverter {
         var outputPath: String? = null
         var dataDictPath: String? = null
         var nfCoreModuleName: String? = null
+        var nfCoreSbwfName: String? = null
 
         // Process args
         for (i in args.indices) {
             when (args[i]) {
                 "--nf-core-module" -> if (i + 1 < args.size) nfCoreModuleName = args[i + 1]
+                "--nf-core-sbwf" -> if (i + 1 < args.size) nfCoreSbwfName = args[i + 1]
                 "--main" -> if (i + 1 < args.size) componentMainPath = args[i + 1]
                 "--test" -> if (i + 1 < args.size) testPath = args[i + 1]
                 "--output" -> if (i + 1 < args.size) outputPath = args[i + 1]
@@ -49,14 +54,26 @@ object TestConverter {
             }
         }
 
-        if ((componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) && nfCoreModuleName.isNullOrBlank()) {
+        val isNfCoreModule = ! nfCoreModuleName.isNullOrBlank()
+        val isNfCoreSbwf = ! nfCoreSbwfName.isNullOrBlank()
+        val isNfCoreComponent = isNfCoreModule || isNfCoreSbwf
+        val isCustomComponent = ! componentMainPath.isNullOrBlank() || ! testPath.isNullOrBlank() || ! outputPath.isNullOrBlank()
+
+        if ( isNfCoreComponent && isCustomComponent ) { // Can't be a nf-core and a custom component
+            System.err.println(
+                usage
+            )
+            exitProcess(1)
+        }
+        
+        if ( isNfCoreModule && isNfCoreSbwf ) { // Can't be a nf-core module and a sub-workflow
             System.err.println(
                 usage
             )
             exitProcess(1)
         }
 
-        if (!nfCoreModuleName.isNullOrBlank() && (!componentMainPath.isNullOrBlank() || !testPath.isNullOrBlank() || !outputPath.isNullOrBlank())) {
+        if ( ! isNfCoreComponent && ! isCustomComponent ) { // Can't be none
             System.err.println(
                 usage
             )
@@ -70,17 +87,17 @@ object TestConverter {
             dataDictPath = "tests/config/test_data.config"
         }
 
-        if (componentMainPath.isNullOrBlank() || testPath.isNullOrBlank() || outputPath.isNullOrBlank()) {
-            System.err.println(
-                usage
-            )
-            exitProcess(1)
+        if (!nfCoreSbwfName.isNullOrBlank()) {
+            componentMainPath = "subworkflows/nf-core/${nfCoreSbwfName}/main.nf"
+            testPath = "tests/subworkflows/nf-core/${nfCoreSbwfName}/main.nf"
+            outputPath = "subworkflows/nf-core/${nfCoreSbwfName}/tests/main.nf.test"
+            dataDictPath = "tests/config/test_data.config"
         }
 
         // Read files
-        val componentMainFile = File(componentMainPath)
-        val pyTestFile = File(testPath)
-        val nfTestFile = File(outputPath)
+        val componentMainFile = File(componentMainPath!!)
+        val pyTestFile = File(testPath!!)
+        val nfTestFile = File(outputPath!!)
         val dataDictFile = dataDictPath?.let { File(it) }
 
         val mainFileRelativeToNFTestFile = componentMainFile.relativeTo(nfTestFile.parentFile)
@@ -174,6 +191,8 @@ object TestConverter {
             "workflow_nfcore"
         } else if (!nfCoreModuleName.isNullOrBlank()) {
             "modules_nfcore"
+        } else if (!nfCoreSbwfName.isNullOrBlank() && componentType == "workflow") {
+            "subworkflows_nfcore"
         } else {
             null
         }
@@ -223,7 +242,7 @@ object TestConverter {
         }
 
         // Delete the test directory if it is nf-core/module
-        if (!nfCoreModuleName.isNullOrBlank()) {
+        if (!nfCoreModuleName.isNullOrBlank() || !nfCoreSbwfName.isNullOrBlank()) {
             val pyTestDirectory = pyTestFile.parentFile
 
             logger.info("Deleting $pyTestDirectory")
@@ -234,6 +253,10 @@ object TestConverter {
         // Delete the pytest entry from tests yml
         if (!nfCoreModuleName.isNullOrBlank()) {
             deleteYamlKey(nfCoreModuleName)
+        }
+
+        if (!nfCoreSbwfName.isNullOrBlank()) {
+            deleteYamlKey("subworkflows/$nfCoreSbwfName")
         }
     }
 
